@@ -185,8 +185,8 @@ h3 {
 
 .about-pic {
     border-radius: 10px;
-    width: 400px;
-    height: 400px;
+    width: 200px;
+    height: 200px;
     margin-top: 2rem;
     margin-right: 2rem;
 }
@@ -596,7 +596,7 @@ body.dark-mode #profile {
     }
 
     .about-pic {
-        width: 300px;
+        width: 200px;
         height: 200px;
         margin-top: 2rem;
         margin: 0 auto;
