@@ -139,7 +139,7 @@ nav a:hover{
 
 /* Profile photo style */
 .profile-pic{
-  width:200px; height:200px; border-radius:50%;
+  width:300px; height:300px; border-radius:50%;
   object-fit:cover;
   border: 3px solid rgba(160,0,212,0.14);
   box-shadow: 0 18px 45px rgba(46,26,73,0.08);
@@ -385,7 +385,14 @@ h3{ font-size:1.1rem; font-weight:700 }
   nav ul{ display:none; } /* keep nav simple on small screens */
   .mode-switch{ margin-left:auto; }
   .about-container { flex-direction: column; align-items:center; text-align:center; padding:18px; gap:14px; }
-  .about-text { text-align:center; }
+  .about-text {
+    font-size: 1rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+    text-align: justify;
+    text-align-last: left;
+    hyphens: auto;
+}
   .about-pic { width:180px; height:180px; }
   .info-card { width: 100%; padding:1.2rem 1.6rem; border-radius:12px; }
   .panel { justify-content: center; gap: 1rem; padding: 0.75rem; }
@@ -406,7 +413,14 @@ h3{ font-size:1.1rem; font-weight:700 }
   .profile-pic { width:130px; height:130px; margin-bottom:14px; }
   .about-container { padding:14px; gap:12px; border-radius:14px; }
   .about-pic { width:140px; height:140px; }
-  .about-text { font-size:0.95rem; line-height:1.6; }
+  .about-text {
+    font-size: 1rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+    text-align: justify;
+    text-align-last: left;
+    hyphens: auto;
+}
   .info-card { width: 100%; padding:1rem 1rem; border-radius:12px; }
   .info-card h3 { font-size:1.25rem; }
   .project-card img { height:140px; }
@@ -428,7 +442,14 @@ h3{ font-size:1.1rem; font-weight:700 }
 /* Orientation adjustments (landscape phones & tablets) */
 @media (orientation: landscape) and (max-width: 820px) {
   .about-container { flex-direction: row; align-items:center; }
-  .about-text { text-align:left; }
+  .about-text {
+    font-size: 1rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+    text-align: justify;
+    text-align-last: left;
+    hyphens: auto;
+}
 }
 
 /* Touch targets & hit-area improvements */
