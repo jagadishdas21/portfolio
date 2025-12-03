@@ -28,16 +28,50 @@
     });
   }
 
-  document.getElementById("sendEmailBtn").addEventListener("click", function (e) {
-  e.preventDefault(); // prevent empty navigation
+  // Mailto anchor: ensure mailto is encoded and robust if you add a message field later.
+  // Your HTML already contains the mailto href; this just ensures we don't break if element id's change.
+  const emailAnchor = document.querySelector('.send-email-btn[href^="mailto:"]');
+  if (emailAnchor) {
+    // keep the existing mailto but ensure encoding is safe
+    // parse current href, rebuild safely
+    try {
+      const url = new URL(emailAnchor.href);
+      // nothing to change now; if you later add a message field, you can update body param here.
+      // Example: url.searchParams.set('body', encodeURIComponent('Hello Jagadish...'));
+      emailAnchor.href = url.toString();
+    } catch (e) {
+      // not a real URL (maybe mailto), so recreate mailto safely:
+      const raw = emailAnchor.getAttribute('href') || '';
+      if (raw.startsWith('mailto:')) {
+        // try not to break it
+        emailAnchor.setAttribute('href', raw);
+      }
+    }
+  }
 
-  const email = "jagadishdas.nitrkl@gmail.com";
-  const subject = encodeURIComponent("Inquiry");
-  const body = ""; // you can add textarea message later
+  // Auto-resize search-input if present (keeps central behavior but capped for aesthetics)
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    const adjust = () => {
+      searchInput.style.height = 'auto';
+      const h = Math.min(searchInput.scrollHeight, 120);
+      searchInput.style.height = h + 'px';
+    };
+    searchInput.addEventListener('input', adjust);
+    // initial call
+    adjust();
+  }
 
-  // final mailto URL
-  const mailtoURL = `mailto:${email}?subject=${subject}&body=${body}`;
+  // Defensive fixes: if any old code referenced missing elements, avoid console errors
+  // e.g., safe get for sendEmailLink
+  const sendEmailLink = document.getElementById('sendEmailLink');
+  if (sendEmailLink) {
+    sendEmailLink.addEventListener('click', function(){
+      const messageInput = document.getElementById('message');
+      const message = messageInput ? messageInput.value : '';
+      const mailtoLink = `mailto:jagadishdas.nitrkl@gmail.com?subject=${encodeURIComponent('Inquiry')}&body=${encodeURIComponent(message)}`;
+      this.href = mailtoLink;
+    });
+  }
 
-  // WORKS in laptops + mobile browsers
-  window.location.href = mailtoURL;
-});
+})();
