@@ -8,17 +8,24 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav>
-        <h1>JEDDY</h1>
-        <ul>
-            <li><a href="#profile">Profile</a></li>
-            <li><a href="#about-me">About Me</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
+    <nav class="navbar">
+        <div class="logo">JEDDY</div>
+
+        <ul class="nav-links">
+        <li><a href="#profile">Profile</a></li>
+        <li><a href="#about">About Me</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
         </ul>
-        <div class="mode-switch">
-            <button id="modeToggle">Dark Mode</button>
+
+        <div class="toggle-wrapper">
+            <div class="mode-toggle" id="modeToggle">
+                <div class="toggle-circle">
+                    <img src="https://img.icons8.com/ios-filled/50/sun--v1.png" id="sunIcon" />
+                    <img src="https://img.icons8.com/ios-filled/50/moon-symbol.png" id="moonIcon" />
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -26,7 +33,7 @@
         <img src="/images/profile.jpg" alt="Jagadish Das" class="profile-pic">
         <h2>Hi, I'm</h2>
         <h1>JEDDY</h1>
-        <h3>Content Creator</h3>
+        <h3 id="typewriter"></h3>
         <div class="social-icons">
             <a href="https://www.linkedin.com/in/jagadish-das-811589211/" target="_blank">
                 <img src="/images/linkedin.png" alt="LinkedIn">
@@ -95,7 +102,7 @@
         <div class="projects-container">
             <div class="project-card">
                 <div class="typewriter">
-                <h3>Lumiere Trailer</h3>
+                <h3>Lumiere'23 Trailer</h3>
                 </div>
                 <img src="/images/lumiere.png" alt="lumiere" class="project-image">
                 <div class="buttons">

@@ -1,77 +1,81 @@
-// Safe, modern JS for the dark/light mode toggle and a couple helpers.
-// This file replaces your previous script.js. It keeps behavior but avoids errors
-// if optional elements are missing, and it persists the chosen mode.
-
-(function(){
-  const modeToggle = document.getElementById('modeToggle');
+// DARK / LIGHT MODE TOGGLE WITH LOCAL STORAGE
+(function () {
+  const modeToggle = document.getElementById("modeToggle");
   const body = document.body;
-  const STORAGE_KEY = 'jeddy_mode';
+  const STORAGE_KEY = "jeddy_mode";
 
-  // Initialize from localStorage if available
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved === 'dark') {
-    body.classList.add('dark-mode');
-    if (modeToggle) modeToggle.textContent = 'Light Mode';
-  } else {
-    body.classList.remove('dark-mode');
-    if (modeToggle) modeToggle.textContent = 'Dark Mode';
+  // Apply saved mode on load
+  const savedMode = localStorage.getItem(STORAGE_KEY);
+  if (savedMode === "dark") {
+    body.classList.add("dark-mode");
+    modeToggle.classList.add("dark");
   }
 
-  // Toggle handler (defensive - only attach if element exists)
-  if (modeToggle) {
-    modeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      const isDark = body.classList.contains('dark-mode');
-      modeToggle.textContent = isDark ? 'Light Mode' : 'Dark Mode';
-      // persist preference
-      try { localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light'); } catch(e){}
-    });
-  }
+  // Toggle theme on click
+  modeToggle?.addEventListener("click", () => {
+    body.classList.toggle("dark-mode");
+    modeToggle.classList.toggle("dark");
+    const isDark = body.classList.contains("dark-mode");
+    localStorage.setItem(STORAGE_KEY, isDark ? "dark" : "light");
+  });
+})();
 
-  // Mailto anchor: ensure mailto is encoded and robust if you add a message field later.
-  // Your HTML already contains the mailto href; this just ensures we don't break if element id's change.
-  const emailAnchor = document.querySelector('.send-email-btn[href^="mailto:"]');
-  if (emailAnchor) {
-    // keep the existing mailto but ensure encoding is safe
-    // parse current href, rebuild safely
-    try {
-      const url = new URL(emailAnchor.href);
-      // nothing to change now; if you later add a message field, you can update body param here.
-      // Example: url.searchParams.set('body', encodeURIComponent('Hello Jagadish...'));
-      emailAnchor.href = url.toString();
-    } catch (e) {
-      // not a real URL (maybe mailto), so recreate mailto safely:
-      const raw = emailAnchor.getAttribute('href') || '';
-      if (raw.startsWith('mailto:')) {
-        // try not to break it
-        emailAnchor.setAttribute('href', raw);
+// TYPEWRITER ANIMATION
+(function () {
+  const roles = [
+    "Dancer",
+    "Content Creator",
+    "Video Editor",
+    "Cinematographer"
+  ];
+
+  let index = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  const speed = 100;
+  const eraseSpeed = 60;
+  const delayBetweenWords = 700;
+
+  const typewriterEl = document.getElementById("typewriter");
+  if (!typewriterEl) return;
+
+  function typeEffect() {
+    const current = roles[index];
+    const visibleText = current.substring(0, charIndex);
+    typewriterEl.textContent = visibleText;
+
+    if (!isDeleting && charIndex < current.length) {
+      charIndex++;
+      setTimeout(typeEffect, speed);
+    } 
+    else if (isDeleting && charIndex > 0) {
+      charIndex--;
+      setTimeout(typeEffect, eraseSpeed);
+    }
+    else {
+      if (!isDeleting) {
+        isDeleting = true;
+        setTimeout(typeEffect, delayBetweenWords);
+      } else {
+        isDeleting = false;
+        index = (index + 1) % roles.length;
+        setTimeout(typeEffect, 200);
       }
     }
   }
 
-  // Auto-resize search-input if present (keeps central behavior but capped for aesthetics)
-  const searchInput = document.getElementById('search-input');
-  if (searchInput) {
-    const adjust = () => {
-      searchInput.style.height = 'auto';
-      const h = Math.min(searchInput.scrollHeight, 120);
-      searchInput.style.height = h + 'px';
-    };
-    searchInput.addEventListener('input', adjust);
-    // initial call
-    adjust();
-  }
+  typeEffect();
+})();
 
-  // Defensive fixes: if any old code referenced missing elements, avoid console errors
-  // e.g., safe get for sendEmailLink
-  const sendEmailLink = document.getElementById('sendEmailLink');
-  if (sendEmailLink) {
-    sendEmailLink.addEventListener('click', function(){
-      const messageInput = document.getElementById('message');
-      const message = messageInput ? messageInput.value : '';
-      const mailtoLink = `mailto:jagadishdas.nitrkl@gmail.com?subject=${encodeURIComponent('Inquiry')}&body=${encodeURIComponent(message)}`;
-      this.href = mailtoLink;
-    });
-  }
+// ================== SEND EMAIL BUTTON ==================
+(function () {
+  const sendEmailBtn = document.getElementById("sendEmailBtn");
+  if (!sendEmailBtn) return;
 
+  sendEmailBtn.addEventListener("click", () => {
+    const subject = encodeURIComponent("Inquiry regarding services");
+    const body = encodeURIComponent("Hi Jagadish,\n\nI would like to get in touch with you.");
+    const mail = `mailto:jagadishdas.nitrkl@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = mail;
+  });
 })();
