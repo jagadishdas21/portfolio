@@ -79,3 +79,19 @@
     window.location.href = mail;
   });
 })();
+
+// ================== SCROLL REVEAL ==================
+(function() {
+  const reveals = document.querySelectorAll('.reveal');
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('active');
+        obs.unobserve(entry.target); // animate only once
+      }
+    });
+  }, { threshold: 0.2 });
+
+  reveals.forEach(el => observer.observe(el));
+})();

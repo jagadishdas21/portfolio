@@ -546,3 +546,16 @@ a, button, .btn, .send-email-btn {
   transition:opacity .3s;
 }
 @media (max-width:480px){ .site-accent{ display:none } }
+
+/* Scroll reveal base state */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px); /* start slightly below */
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* Active state when element is visible */
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
