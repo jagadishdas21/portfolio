@@ -134,9 +134,9 @@ nav a:hover {
 
 /* =============== TOGGLE BUTTON =============== */
 .mode-toggle {
-  width: 35px;
-  height: 31px;
-  border-radius: 10px;
+  width: 45px;
+  height: 40px;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -168,8 +168,8 @@ body.dark-mode #moonIcon {
 
 /* Dark Mode */
 body.dark-mode .mode-toggle {
-  width:35px; height:30px;
-  border-radius:10px;
+  width:45px; height:40px;
+  border-radius:12px;
   background:var(--input);
   border:1px solid var(--input-border);
   box-shadow: 0 8px 20px rgba(46,26,73,0.04);
