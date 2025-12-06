@@ -47,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // ================== TYPEWRITER ANIMATION ==================
   (function () {
     const roles = [
-      "Dancer",
       "Content Creator",
       "Video Editor",
       "Cinematographer"
