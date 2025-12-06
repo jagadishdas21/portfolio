@@ -49,7 +49,7 @@ body{
   padding-bottom: 80px;
 }
 
-/* Utility container */
+Utility container
 main, .site-wrapper { 
   max-width: var(--max-width); 
   margin: 0 auto; 
@@ -101,7 +101,7 @@ nav ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 26px;
+  gap: 25px;
   list-style: none;
   flex: 1;
   margin: 0;
@@ -123,66 +123,109 @@ nav a:hover {
   background: rgba(160,0,212,0.07);
 }
 
-/* Right side (alignment perfect) */
-.toggle-wrapper {
+/* ================= RIGHT SIDE ================= */
+.nav-right {
   margin-left: auto;
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
-/* =============== MODE TOGGLE BUTTON =============== */
+/* =============== TOGGLE BUTTON =============== */
 .mode-toggle {
-  width: 64px;
-  height: 32px;
-  border-radius: 32px;
-  background: #e5e7eb;
-  padding: 4px;
-  cursor: pointer;
-  position: relative;
-  transition: 0.35s ease;
-  display: flex;
-  align-items: center;
-  box-shadow: inset 3px 3px 6px rgba(0,0,0,0.10),
-              inset -3px -3px 8px rgba(255,255,255,0.8);
-}
-
-body.dark-mode .mode-toggle {
-  background: #1c1c22;
-  box-shadow: inset 4px 4px 10px rgba(0,0,0,0.60),
-              inset -3px -3px 6px rgba(255,255,255,0.06);
-}
-
-/* Moving circle */
-.toggle-circle {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #ffffff;
-  position: absolute;
-  left: 4px;
-  transition: 0.35s ease;
+  width: 35px;
+  height: 31px;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  transition: 0.25s ease;
+  background: #e9eef5;
+  box-shadow: 0 0 0 2px transparent;
+  position: relative;
 }
 
-body.dark-mode .toggle-circle {
-  left: 36px;
-  background: #000;
+.mode-toggle:hover {
+  box-shadow: 0 0 0 2px #5177a8;
 }
 
-/* Icons */
-.toggle-circle img {
-  width: 16px;
-  height: 16px;
+.mode-toggle img {
+  width: 20px;
+  height: 20px;
   position: absolute;
-  transition: 0.3s;
-  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
+/* Light Mode */
 #sunIcon { opacity: 1; }
+#moonIcon { opacity: 0; }
+
+body.dark-mode #moonIcon {
+  filter: saturate(0%) invert(1);
+}
+
+/* Dark Mode */
+body.dark-mode .mode-toggle {
+  width:35px; height:30px;
+  border-radius:10px;
+  background:var(--input);
+  border:1px solid var(--input-border);
+  box-shadow: 0 8px 20px rgba(46,26,73,0.04);
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.social-icons a img:hover{ transform:translateY(-4px) scale(1.03); box-shadow: 0 20px 40px var(--accent-glow) }
 body.dark-mode #sunIcon { opacity: 0; }
 body.dark-mode #moonIcon { opacity: 1; }
+
+/* ================= HAMBURGER MENU ================= */
+.menu-icon {
+  display: none;
+  font-size: 30px;
+  cursor: pointer;
+  margin-top: 0.3rem;
+  transition: 0.3s;
+  color: var(--heading);
+}
+.menu-icon:hover {
+  transform: scale(1.05);
+}
+/* ===================== MOBILE ===================== */
+@media (max-width: 768px) {
+  .nav-right {
+    gap: 10px;
+  }
+
+  nav ul {
+    position: fixed;
+    top: 78px;
+    right: -100%;
+    width: 200px;
+    height: auto;
+    background: var(--bg);
+    padding: 30px 25px;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 0 0 0 22px;
+    backdrop-filter: blur(10px);
+    box-shadow: -4px 4px 25px rgba(0,0,0,0.12);
+    transition: 0.45s ease;
+  }
+
+  nav ul.show {
+    right: 0;
+  }
+
+  nav ul li a {
+    width: 100%;
+    display: block;
+    text-align: right;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+}
 
 
 /* Section base style */
@@ -206,7 +249,7 @@ body.dark-mode #moonIcon { opacity: 1; }
 
 /* Profile photo style */
 .profile-pic{
-  width:180px; height:180px; border-radius:50%;
+  border-radius:50%;
   object-fit:cover;
   border: 3px solid rgba(160,0,212,0.14);
   box-shadow: 0 18px 45px rgba(46,26,73,0.08);
@@ -241,9 +284,15 @@ body.dark-mode #moonIcon { opacity: 1; }
   transition: transform .22s ease, box-shadow .22s ease;
 }
 .social-icons a img:hover{ transform:translateY(-4px) scale(1.03); box-shadow: 0 20px 40px var(--accent-glow) }
+/* Dark Mode – social icons turn white */
+body.dark-mode .social-icons a img {
+  filter: brightness(10)
+  saturate(0)
+  invert(1);
+}
 
-/* About section: container card
-   Note: kept max-width 800 but made padding flexible for small screens */
+
+/* About section: container card */
 .about-container{
   width:100%;
   max-width:980px;
@@ -330,6 +379,10 @@ body.dark-mode .about-container{
   text-align:center;
 }
 
+body.dark-mode .info-card img.info {
+  filter: invert(1);
+}
+
 
 /* Skills cards */
 .experience-content{ width:100%; display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-top: 2rem; }
@@ -391,26 +444,17 @@ body.dark-mode .about-container{
 #contact{ display:flex; flex-direction:column; align-items:center; gap:12px; padding-bottom:40px; }
 footer{ margin-top:48px; padding:20px; color:var(--text-secondary); font-size:0.95rem; text-align:center; }
 
-/* Inputs and chat area (matching palettes) */
-#search-input, textarea, input, .chat-input-container input{
-  background: var(--input);
-  border: 1px solid var(--input-border);
-  padding:12px 16px;
-  border-radius: 14px;
-  color: var(--text-primary);
-  outline:none;
-  transition: box-shadow .18s, border-color .18s;
-  font-family: 'Josefin Sans', sans-serif;
-  font-size:1rem;
-}
-#search-input:focus, textarea:focus, input:focus{ box-shadow: 0 8px 28px var(--accent-glow); border-color: var(--accent); }
-
 /* Dark-mode specific tweaks for better contrast */
 body.dark-mode .project-card,
 body.dark-mode .info-card,
 body.dark-mode .experience-card{
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   border: 1px solid var(--input-border);
+}
+body.dark-mode .send-email-btn img {
+  filter: brightness(12)
+  saturate(0)
+  invert(1);
 }
 
 /* Heading / typography tweaks */
@@ -439,7 +483,7 @@ h3{ font-size:1.1rem; font-weight:700 }
 @media (max-width: 1100px) {
   main, .site-wrapper { padding-left: 20px; padding-right: 20px; }
   .about-container { max-width: 900px; padding:22px; }
-  .profile-pic { width:200px; height:200px; }
+  .profile-pic { width:180px; height:180px; }
   .info-card { padding: 1.6rem 2.8rem; width: 46%; }
   .project-card { max-width:320px; }
   nav { top:16px; padding:10px 12px; }
@@ -511,7 +555,7 @@ h3{ font-size:1.1rem; font-weight:700 }
 /* Very large screens (desktop large) */
 @media (min-width: 1400px) {
   :root { --max-width: 1400px; }
-  .profile-pic { width:300px; height:300px; }
+  .profile-pic { width:240px; height:240px; }
   .about-container { padding:36px; border-radius:28px; }
   .info-card { padding:2rem 4rem; border-radius:18px; width:42%; }
   .project-card { max-width:420px; }

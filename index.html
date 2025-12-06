@@ -9,24 +9,25 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">JEDDY</div>
+    <div class="logo">JEDDY</div>
 
-        <ul class="nav-links">
+    <!-- Desktop Nav -->
+    <ul class="nav-links" id="navLinks">
         <li><a href="#profile">Profile</a></li>
-        <li><a href="#about">About Me</a></li>
+        <li><a href="#about-me">About Me</a></li>
         <li><a href="#skills">Skills</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#contact">Contact</a></li>
-        </ul>
+    </ul>
 
-        <div class="toggle-wrapper">
-            <div class="mode-toggle" id="modeToggle">
-                <div class="toggle-circle">
-                    <img src="https://img.icons8.com/ios-filled/50/sun--v1.png" id="sunIcon" />
-                    <img src="https://img.icons8.com/ios-filled/50/moon-symbol.png" id="moonIcon" />
-                </div>
-            </div>
+    <!-- Mobile Nav -->
+    <div class="nav-right">
+        <div class="mode-toggle" id="modeToggle">
+            <img src="images/light.png" id="sunIcon" />
+            <img src="images/dark.png" id="moonIcon" />
         </div>
+        <div class="menu-icon" id="menuIcon">&#9776;</div>
+    </div>
     </nav>
 
     <section id="profile" class="section">
@@ -86,11 +87,11 @@
             </div>
             <div class="experience-card reveal">
                 <ul>
-                    <li>Premiere Pro</li>
                     <li>After Effects</li>
+                    <li>Premiere Pro</li>
+                    <li>Davinci Resolve</li>
                     <li>Photoshop</li>
                     <li>Lightroom</li>
-                    <li>Illustrator</li>
                     <li>Figma</li>
                     <li>Canva</li>
                 </ul>
