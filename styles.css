@@ -510,7 +510,6 @@ h3{ font-size:1.1rem; font-weight:700 }
   .about-text {
     font-size: 1rem;
     color: var(--text-primary);
-    line-height: 1.7;
     text-align: justify;
     text-align-last: left;
     hyphens: auto;
@@ -538,10 +537,10 @@ h3{ font-size:1.1rem; font-weight:700 }
   .about-text {
     font-size: 1rem;
     color: var(--text-primary);
-    line-height: 1.7;
     text-align: justify;
     text-align-last: left;
     hyphens: auto;
+    
 }
   .info-card { width: 100%; padding:1rem 1rem; border-radius:12px; }
   .info-card h3 { font-size:1.25rem; }
@@ -567,7 +566,6 @@ h3{ font-size:1.1rem; font-weight:700 }
   .about-text {
     font-size: 1rem;
     color: var(--text-primary);
-    line-height: 1.7;
     text-align: justify;
     text-align-last: left;
     hyphens: auto;
