@@ -314,7 +314,7 @@ body.dark-mode .about-container{
 }
 
 /* About image and text */
-.about-pic{ width:230px; height:230px; border-radius:16px; object-fit:cover; border:1px solid var(--input-border); flex-shrink:0; }
+.about-pic{ width:255px; height:255px; border-radius:16px; object-fit:cover; border:1px solid var(--input-border); flex-shrink:0; }
 .about-text {
     font-size: 1.38rem;
     color: var(--text-primary);
