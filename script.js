@@ -42,16 +42,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ================== HAMBURGER MOBILE MENU ==================
   if (menuIcon && navLinks) {
+    const setMenuState = (open) => {
+      navLinks.classList.toggle("show", open);
+      menuIcon.classList.toggle("active", open);
+      menuIcon.setAttribute("aria-expanded", String(open));
+      body.classList.toggle("menu-open", open);
+    };
+
+    setMenuState(false);
+
     menuIcon.addEventListener("click", () => {
-      navLinks.classList.toggle("show");
-      menuIcon.classList.toggle("active");
+      const isOpen = navLinks.classList.contains("show");
+      setMenuState(!isOpen);
     });
 
     navLinks.querySelectorAll("a").forEach(link => {
       link.addEventListener("click", () => {
-        navLinks.classList.remove("show");
-        menuIcon.classList.remove("active");
+        setMenuState(false);
       });
+    });
+
+    document.addEventListener("click", (event) => {
+      const clickedInsideMenu = navLinks.contains(event.target);
+      const clickedMenuIcon = menuIcon.contains(event.target);
+      if (!clickedInsideMenu && !clickedMenuIcon) {
+        setMenuState(false);
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        setMenuState(false);
+      }
     });
   }
 
