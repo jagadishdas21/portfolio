@@ -7,6 +7,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
   const STORAGE_KEY = "jeddy_mode";
 
+  // ================== ACTIVE NAV LINK ==================
+  if (navLinks) {
+    const page = window.location.pathname.split("/").pop().toLowerCase() || "index.html";
+    navLinks.querySelectorAll("a").forEach((link) => {
+      const href = (link.getAttribute("href") || "").toLowerCase();
+      if (href && href === page) {
+        link.classList.add("active");
+      }
+    });
+  }
+
   // ================== DARK / LIGHT MODE ==================
   if (modeToggle && sunIcon && moonIcon) {
     // Apply saved theme
@@ -47,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ================== TYPEWRITER ANIMATION ==================
   (function () {
     const roles = [
-      "Content Creator",
+      // "Content Creator",
       "Video Editor",
       "Cinematographer"
     ];
@@ -115,5 +126,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { threshold: 0.2 });
 
     reveals.forEach(el => observer.observe(el));
+  })();
+
+  // ================== FILM POSTER TO PLAYER ==================
+  (function () {
+    const wraps = document.querySelectorAll(".film-player-wrap[data-video-id]");
+    if (!wraps.length) return;
+
+    wraps.forEach((wrap) => {
+      const launchBtn = wrap.querySelector(".film-launch");
+      const videoId = wrap.getAttribute("data-video-id");
+      if (!launchBtn || !videoId) return;
+
+      launchBtn.addEventListener("click", () => {
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
+        iframe.title = "YouTube video player";
+        iframe.loading = "lazy";
+        iframe.referrerPolicy = "strict-origin-when-cross-origin";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+        wrap.innerHTML = "";
+        wrap.appendChild(iframe);
+      }, { once: true });
+    });
   })();
 });
