@@ -6,6 +6,41 @@ document.addEventListener("DOMContentLoaded", () => {
   const moonIcon = document.getElementById("moonIcon");
   const body = document.body;
   const STORAGE_KEY = "jeddy_mode";
+  const PAGE_EXIT_MS = 220;
+
+  // ================== PAGE ENTER / EXIT ==================
+  requestAnimationFrame(() => {
+    body.classList.add("page-ready");
+  });
+
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("a[href]");
+    if (!link) return;
+
+    const href = link.getAttribute("href");
+    if (!href || href.startsWith("#")) return;
+    if (link.hasAttribute("download")) return;
+    if (link.target && link.target !== "_self") return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    let targetUrl;
+    try {
+      targetUrl = new URL(link.href, window.location.href);
+    } catch {
+      return;
+    }
+
+    // Keep external, mail and phone links immediate.
+    if (targetUrl.origin !== window.location.origin) return;
+    if (targetUrl.protocol === "mailto:" || targetUrl.protocol === "tel:") return;
+    if (targetUrl.href === window.location.href) return;
+
+    event.preventDefault();
+    body.classList.add("page-leaving");
+    window.setTimeout(() => {
+      window.location.href = targetUrl.href;
+    }, PAGE_EXIT_MS);
+  });
 
   // ================== ACTIVE NAV LINK ==================
   if (navLinks) {

@@ -26,6 +26,11 @@
   --ls-heading: 0.004em;
   --section-pad-y: clamp(2.5rem, 2rem + 2vw, 5rem);
   --section-pad-x: clamp(0.75rem, 2vw, 2rem);
+  --mobile-nav-offset: 84px;
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 180ms;
+  --dur-base: 260ms;
+  --dur-slow: 340ms;
 }
 
 body.dark-mode {
@@ -62,11 +67,53 @@ body{
   font-feature-settings: "kern" 1, "liga" 1, "clig" 1;
   overflow-x:hidden;
   padding-bottom: 80px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--dur-base) var(--ease-standard),
+    transform var(--dur-base) var(--ease-standard),
+    background var(--dur-slow) var(--ease-standard),
+    color var(--dur-slow) var(--ease-standard);
+}
+
+body.page-ready {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.page-leaving {
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
 }
 
 p {
   line-height: 1.68;
   letter-spacing: 0.008em;
+}
+
+a,
+button,
+.btn,
+.send-email-btn,
+#contact .contact-action-btn,
+.menu-icon,
+.mode-toggle,
+.info-card,
+.project-card,
+#skills .skill-chip,
+#projects .film-card,
+.social-icons a img {
+  transition-timing-function: var(--ease-standard);
+}
+
+button:active,
+a.btn:active,
+.send-email-btn:active,
+#contact .contact-action-btn:active,
+.menu-icon:active,
+.mode-toggle:active {
+  transform: translateY(1px) scale(0.99);
 }
 
 /* Utility container */
@@ -113,6 +160,9 @@ body.dark-mode nav {
   letter-spacing: 0.08em;
   color: var(--heading);
   font-size:1.15rem;
+  text-decoration: none;
+  display: inline-block;
+  cursor: default;
   background: linear-gradient(90deg, var(--accent), rgba(0,0,0,0));
   -webkit-background-clip: text;
   background-clip: text;
@@ -132,25 +182,33 @@ nav ul {
   margin: 0;
 }
 
-nav a {
+nav .nav-links a {
   color: var(--text-secondary);
   text-decoration: none;
   font-weight: 400;
   font-size: 0.96rem;
   line-height: 1.35;
   letter-spacing: 0.014em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 104px;
+  min-height: 42px;
   padding: 10px 14px;
   border-radius: 12px;
-  transition: 0.2s;
+  transition:
+    color var(--dur-fast) var(--ease-standard),
+    background var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-standard);
 }
 
-nav a:hover {
+nav .nav-links a:hover {
   color: var(--heading);
   transform: translateY(-2px);
   background: rgba(160,0,212,0.07);
 }
 
-nav a.active {
+nav .nav-links a.active {
   color: var(--heading);
   background: rgba(160,0,212,0.12);
   font-weight: 600;
@@ -173,7 +231,10 @@ nav a.active {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: 0.25s ease;
+  transition:
+    transform var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-fast) var(--ease-standard),
+    background var(--dur-base) var(--ease-standard);
   background: #e9eef5;
   box-shadow: 0 0 0 2px transparent;
   position: relative;
@@ -224,7 +285,7 @@ body.dark-mode .mode-toggle:hover {
   background: transparent;
   padding: 0;
   box-shadow: none;
-  transition: transform 0.2s ease;
+  transition: transform var(--dur-fast) var(--ease-standard);
   position: relative;
   align-items: center;
   justify-content: center;
@@ -282,17 +343,15 @@ body.dark-mode .menu-icon .icon-close {
 
   nav ul {
     position: fixed;
-    top: 84px;
+    top: var(--mobile-nav-offset);
     left: 0;
     right: 0;
     bottom: 0;
     width: 100vw;
-    height: calc(100vh - 84px);
-    background:
-      radial-gradient(1200px 600px at 10% 10%, rgba(160,0,212,0.06), transparent 8%),
-      linear-gradient(180deg, var(--bg), var(--bg));
+    height: calc(100dvh - var(--mobile-nav-offset));
+    background: transparent;
     border: 0;
-    padding: 32px 24px 40px;
+    padding: 28px 24px 40px;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
@@ -323,6 +382,8 @@ body.dark-mode .menu-icon .icon-close {
 
   nav ul li a {
     width: 100%;
+    min-width: 0;
+    min-height: 56px;
     display: block;
     text-align: center;
     color: var(--heading);
@@ -375,7 +436,21 @@ body.dark-mode .menu-icon .icon-close {
     overflow: hidden;
   }
 
+  body.menu-open::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 994;
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(160,0,212,0.06), transparent 8%),
+      linear-gradient(180deg, var(--bg), var(--bg));
+  }
+
   body.dark-mode nav ul {
+    background: transparent;
+  }
+
+  body.dark-mode.menu-open::before {
     background:
       radial-gradient(1200px 600px at 10% 10%, rgba(255,0,255,0.08), transparent 8%),
       linear-gradient(180deg, var(--bg), var(--bg));
@@ -1196,6 +1271,7 @@ p, li, a, button, input, textarea {
 /* Accessibility: reduce motion if user prefers */
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
+  body { opacity: 1 !important; transform: none !important; }
 }
 
 /* =========================
@@ -1216,7 +1292,7 @@ p, li, a, button, input, textarea {
 /* Tablets (iPad portrait / larger Android tablets) */
 @media (max-width: 860px) {
   nav ul { gap: 16px; }
-  nav a { padding: 8px 10px; font-size: 0.92rem; }
+  nav .nav-links a { padding: 8px 10px; font-size: 0.92rem; }
   #about-me .about-container { padding: 20px; }
   #about-me .about-pic { max-width: 100%; max-height: none; }
   .profile-pic { width:200px; height:200px; }
@@ -1267,10 +1343,10 @@ p, li, a, button, input, textarea {
 
 /* Mobile phones (iPhone / Android) — portrait narrow screens */
 @media (max-width: 480px) {
-  :root { --safe-pad: 12px; } /* reduce page padding */
+  :root { --safe-pad: 12px; --mobile-nav-offset: 76px; } /* reduce page padding */
   main, .site-wrapper { padding: 70px 12px 40px; }
   nav { top:12px; left: 12px; right: 12px; transform:none; width: auto; padding:8px 10px; border-radius:14px; }
-  nav ul { top: 76px; height: calc(100vh - 76px); padding-top: 24px; }
+  nav ul { padding-top: 24px; }
   nav h1 { font-size:1rem; letter-spacing:1.2px; }
   .mode-switch button { padding:8px 10px; font-size:0.9rem; }
   #profile h1 { font-size:1.8rem; }
