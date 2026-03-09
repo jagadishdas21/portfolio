@@ -1245,6 +1245,13 @@ footer{
   line-height: 1.55;
   letter-spacing: 0.012em;
 }
+.footer-year {
+  font-family: 'Cinzel', 'Cormorant Garamond', Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-variant-numeric: lining-nums;
+  letter-spacing: 0.05em;
+  color: var(--heading);
+}
 
 /* Dark-mode specific tweaks for better contrast */
 body.dark-mode .project-card,
