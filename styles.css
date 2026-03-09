@@ -1,28 +1,28 @@
-/* Josefin Sans is loaded via <link> in HTML for faster first paint */
+/* Font families are loaded via <link> in HTML for faster first paint */
 
 :root{
   /* Light mode palette (default) */
-  --bg: #F4EEFF;
-  --card: #FFFFFF;
-  --input: #F3E8FF;
-  --input-border: #CBB6E9;
-  --text-primary: #1A0022;
-  --text-secondary: #4E3B66;
-  --heading: #2C0033;
-  --accent: #A000D4;
-  --accent-glow: rgba(160,0,212,0.18);
-  --shadow-1: 0 6px 20px rgba(46,26,73,0.08);
+  --bg: #F5F1E8;
+  --card: #FBF8F2;
+  --input: #F7F3EB;
+  --input-border: #D8D0C3;
+  --text-primary: #3F4A59;
+  --text-secondary: #5A6572;
+  --heading: #353F4D;
+  --accent: #8C6A43;
+  --accent-glow: rgba(140,106,67,0.18);
+  --shadow-1: 0 8px 24px rgba(45,40,34,0.10);
   --radius: 22px;
   --max-width: 1200px;
   --safe-pad: 24px; /* used for mobile safe spacing */
-  --fs-body: clamp(1rem, 0.95rem + 0.25vw, 1.12rem);
-  --fs-h1: clamp(2rem, 1.55rem + 2vw, 3.2rem);
-  --fs-h2: clamp(1.45rem, 1.2rem + 1vw, 2.05rem);
-  --fs-h3: clamp(1.08rem, 1rem + 0.45vw, 1.35rem);
-  --lh-body: 1.7;
-  --lh-heading: 1.15;
-  --ls-body: 0.008em;
-  --ls-heading: 0.004em;
+  --fs-body: clamp(1rem, 0.98rem + 0.18vw, 1.08rem);
+  --fs-h1: clamp(1.72rem, 1.45rem + 1.25vw, 2.4rem);
+  --fs-h2: clamp(1.38rem, 1.2rem + 0.85vw, 1.9rem);
+  --fs-h3: clamp(1.06rem, 0.99rem + 0.35vw, 1.28rem);
+  --lh-body: 1.6;
+  --lh-heading: 1.24;
+  --ls-body: 0.003em;
+  --ls-heading: 0.01em;
   --section-pad-y: clamp(2.5rem, 2rem + 2vw, 5rem);
   --section-pad-x: clamp(0.75rem, 2vw, 2rem);
   --mobile-nav-offset: 84px;
@@ -34,16 +34,16 @@
 
 body.dark-mode {
   /* Dark overrides */
-  --bg: #150016;
-  --card: #1D0A20;
-  --input: #2A142E;
-  --input-border: #3B2240;
-  --text-primary: #FFFFFF;
-  --text-secondary: #C2B9D4;
-  --heading: #D6D0E0;
-  --accent: #FF00FF;
-  --accent-glow: rgba(255,0,255,0.14);
-  --shadow-1: 0 8px 30px rgba(0,0,0,0.6);
+  --bg: #24201C;
+  --card: #2D2823;
+  --input: #332D27;
+  --input-border: #4A433B;
+  --text-primary: #EFE9DD;
+  --text-secondary: #D4CCBE;
+  --heading: #F5EFE4;
+  --accent: #C8A574;
+  --accent-glow: rgba(200,165,116,0.2);
+  --shadow-1: 0 10px 30px rgba(0,0,0,0.45);
 }
 
 /* Global resets + typography */
@@ -51,8 +51,8 @@ body.dark-mode {
 html,body{height:100%}
 html{scroll-behavior:smooth}
 body{
-  font-family: 'Josefin Sans', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: radial-gradient(1200px 600px at 10% 10%, rgba(160,0,212,0.06), transparent 8%),
+  font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(140,106,67,0.07), transparent 12%),
               linear-gradient(180deg, var(--bg), var(--bg));
   color: var(--text-primary);
   -webkit-font-smoothing:antialiased;
@@ -81,8 +81,8 @@ body.page-leaving {
 }
 
 p {
-  line-height: 1.68;
-  letter-spacing: 0.008em;
+  line-height: 1.6;
+  letter-spacing: 0.003em;
 }
 
 a,
@@ -149,6 +149,7 @@ body.dark-mode nav {
 
 /* Brand name */
 .logo {
+  font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
   font-weight:700;
   letter-spacing: 0.08em;
   color: var(--heading);
@@ -176,6 +177,7 @@ nav ul {
 }
 
 nav .nav-links a {
+  font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
   color: var(--text-secondary);
   text-decoration: none;
   font-weight: 400;
@@ -198,12 +200,12 @@ nav .nav-links a {
 nav .nav-links a:hover {
   color: var(--heading);
   transform: translateY(-2px);
-  background: rgba(160,0,212,0.07);
+  background: rgba(140,106,67,0.10);
 }
 
 nav .nav-links a.active {
   color: var(--heading);
-  background: rgba(160,0,212,0.12);
+  background: rgba(140,106,67,0.16);
   font-weight: 600;
 }
 
@@ -228,13 +230,14 @@ nav .nav-links a.active {
     transform var(--dur-fast) var(--ease-standard),
     box-shadow var(--dur-fast) var(--ease-standard),
     background var(--dur-base) var(--ease-standard);
-  background: #e9eef5;
+  background: var(--card);
+  border: 1px solid var(--input-border);
   box-shadow: 0 0 0 2px transparent;
   position: relative;
 }
 
 .mode-toggle:hover {
-  box-shadow: 0 0 0 2px #5177a8;
+  box-shadow: 0 0 0 2px rgba(140,106,67,0.35);
 }
 
 .mode-toggle img {
@@ -265,7 +268,7 @@ body.dark-mode .mode-toggle {
 body.dark-mode #sunIcon { opacity: 0; }
 body.dark-mode #moonIcon { opacity: 1; }
 body.dark-mode .mode-toggle:hover {
-  box-shadow: 0 0 0 2px #5177a8;
+  box-shadow: 0 0 0 2px rgba(200,165,116,0.38);
 }
 
 /* ================= HAMBURGER MENU ================= */
@@ -321,12 +324,12 @@ body.dark-mode .mode-toggle:hover {
 }
 
 body.dark-mode .menu-icon {
-  color: #ffffff;
+  color: var(--heading);
 }
 
 body.dark-mode .menu-icon .icon-open,
 body.dark-mode .menu-icon .icon-close {
-  color: #ffffff;
+  color: var(--heading);
 }
 /* ===================== MOBILE ===================== */
 @media (max-width: 768px) {
@@ -397,7 +400,7 @@ body.dark-mode .menu-icon .icon-close {
   }
 
   nav ul li a:hover {
-    background: rgba(160,0,212,0.1);
+    background: rgba(140,106,67,0.14);
     color: var(--heading);
     transform: none;
   }
@@ -435,7 +438,7 @@ body.dark-mode .menu-icon .icon-close {
     inset: 0;
     z-index: 994;
     background:
-      radial-gradient(1200px 600px at 10% 10%, rgba(160,0,212,0.06), transparent 8%),
+      radial-gradient(1200px 600px at 10% 10%, rgba(140,106,67,0.07), transparent 12%),
       linear-gradient(180deg, var(--bg), var(--bg));
   }
 
@@ -445,7 +448,7 @@ body.dark-mode .menu-icon .icon-close {
 
   body.dark-mode.menu-open::before {
     background:
-      radial-gradient(1200px 600px at 10% 10%, rgba(255,0,255,0.08), transparent 8%),
+      radial-gradient(1200px 600px at 10% 10%, rgba(200,165,116,0.1), transparent 12%),
       linear-gradient(180deg, var(--bg), var(--bg));
   }
 }
@@ -475,17 +478,27 @@ body.dark-mode .menu-icon .icon-close {
 .profile-pic{
   border-radius:50%;
   object-fit:cover;
-  border: 3px solid rgba(160,0,212,0.14);
+  border: 3px solid rgba(140,106,67,0.18);
   box-shadow: 0 18px 45px rgba(46,26,73,0.08);
   transition: transform .4s ease;
   margin-bottom: 1rem;
   margin-top: 2rem;
 }
 
-/* Intro headings (Josefin Sans rules) */
-#profile h2 { font-weight:500; font-size:1.02rem; color:var(--text-secondary); letter-spacing:0.04em; line-height: 1.35; margin:0; }
-#profile h1 { font-size: var(--fs-h1); font-weight:700; color:var(--heading); letter-spacing:0.012em; line-height: 1.1; margin:0.12em 0; }
-#profile h3 { font-weight:600; font-size:1.08rem; color:var(--text-secondary); letter-spacing: 0.018em; line-height: 1.4; margin:0; }
+/* Intro headings */
+#profile h2 { font-weight:500; font-size:1rem; color:var(--text-secondary); letter-spacing:0.02em; line-height: 1.4; margin:0; }
+#profile h1 {
+  font-size: clamp(2.18rem, 1.92rem + 1.3vw, 3.05rem);
+  font-weight: 700;
+  color: var(--heading);
+  letter-spacing: 0.032em;
+  word-spacing: 0.12em;
+  line-height: 1.08;
+  margin: 0.14em 0 0.18em;
+  font-kerning: normal;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+#profile h3 { font-weight:500; font-size:1.02rem; color:var(--text-secondary); letter-spacing: 0.01em; line-height: 1.45; margin:0; }
 #typewriter {
     min-height: 28px;
     display: inline-block;
@@ -504,9 +517,9 @@ body.dark-mode .menu-icon .icon-close {
 .social-icons{ display:flex; gap:14px; margin-top:8px; align-items:center }
 .social-icons a img{
   width:44px; height:44px; border-radius:10px; padding:8px;
-  background:var(--input);
+  background:var(--card);
   border:1px solid var(--input-border);
-  box-shadow: 0 8px 20px rgba(46,26,73,0.04);
+  box-shadow: 0 8px 18px rgba(45,40,34,0.08);
   transition: transform .22s ease, box-shadow .22s ease;
 }
 .social-icons a img:hover{ transform:translateY(-4px) scale(1.03); box-shadow: 0 20px 40px var(--accent-glow) }
@@ -515,6 +528,7 @@ body.dark-mode .social-icons a img {
   filter: brightness(10)
   saturate(0)
   invert(1);
+  box-shadow: none;
 }
 
 
@@ -544,8 +558,8 @@ body.dark-mode .about-container{
 .about-text {
     font-size: clamp(1.03rem, 0.98rem + 0.3vw, 1.22rem);
     color: var(--text-primary);
-    line-height: 1.75;
-    letter-spacing: 0.012em;
+    line-height: 1.64;
+    letter-spacing: 0.004em;
     text-align: justify;
     text-align-last: left;
     hyphens: auto;
@@ -598,9 +612,9 @@ body.about-page .site-wrapper {
 
 #about-me.about-minimal h2 {
   color: var(--heading);
-  font-size: clamp(2.2rem, 1.9rem + 2vw, 4rem);
-  line-height: 1.06;
-  letter-spacing: -0.012em;
+  font-size: clamp(1.68rem, 1.46rem + 1.1vw, 2.45rem);
+  line-height: 1.2;
+  letter-spacing: 0.006em;
 }
 
 #about-me .about-accent {
@@ -638,25 +652,25 @@ body.about-page .site-wrapper {
 
 #about-me.about-minimal h3 {
   color: var(--heading);
-  font-size: clamp(1.85rem, 1.4rem + 1.15vw, 3rem);
-  line-height: 1.2;
-  letter-spacing: -0.008em;
+  font-size: clamp(1.38rem, 1.2rem + 0.85vw, 1.95rem);
+  line-height: 1.28;
+  letter-spacing: 0.008em;
   margin-bottom: 0.3rem;
 }
 
 #about-me .about-subline {
   color: var(--text-secondary);
-  font-size: clamp(1.12rem, 1rem + 0.6vw, 1.85rem);
-  line-height: 1.45;
-  letter-spacing: 0.007em;
+  font-size: clamp(1.02rem, 0.95rem + 0.3vw, 1.2rem);
+  line-height: 1.58;
+  letter-spacing: 0.005em;
   margin-bottom: 1.8rem;
 }
 
 #about-me .about-main-copy {
   color: var(--text-primary);
-  font-size: clamp(1.1rem, 1rem + 0.34vw, 1.45rem);
-  line-height: 1.74;
-  letter-spacing: 0.008em;
+  font-size: clamp(1.02rem, 0.98rem + 0.18vw, 1.14rem);
+  line-height: 1.64;
+  letter-spacing: 0.003em;
   max-width: 72ch;
 }
 
@@ -836,6 +850,8 @@ body.dark-mode .info-card img.info {
   height: 26px;
   object-fit: contain;
   flex-shrink: 0;
+  /* Force a unified premium monochrome icon look in light mode */
+  filter: grayscale(1) brightness(0.32);
 }
 
 #skills .skill-icon-text {
@@ -843,7 +859,7 @@ body.dark-mode .info-card img.info {
   align-items: center;
   justify-content: center;
   border-radius: 7px;
-  background: rgba(160,0,212,0.12);
+  background: rgba(140,106,67,0.14);
   color: var(--accent);
   font-weight: 700;
   font-size: 0.8rem;
@@ -1054,7 +1070,7 @@ body.dark-mode .info-card img.info {
 .btn{
   display:inline-flex; align-items:center; justify-content:center;
   padding:10px 14px; border-radius:14px;
-  text-decoration:none; color:var(--card); background: linear-gradient(90deg, var(--accent), rgba(160,0,212,0.75));
+  text-decoration:none; color:var(--card); background: linear-gradient(90deg, var(--accent), rgba(140,106,67,0.78));
   font-weight:600; letter-spacing: 0.4px;
   line-height: 1.2;
   box-shadow: 0 10px 30px var(--accent-glow);
@@ -1100,17 +1116,17 @@ body.dark-mode .info-card img.info {
 }
 
 #contact.contact-minimal h2 {
-  font-size: clamp(2.2rem, 1.9rem + 2vw, 4rem);
-  line-height: 1.06;
-  letter-spacing: -0.012em;
+  font-size: clamp(1.68rem, 1.46rem + 1.1vw, 2.45rem);
+  line-height: 1.2;
+  letter-spacing: 0.006em;
   margin-bottom: 0.15rem;
 }
 
 #contact .contact-intro {
   color: var(--text-secondary);
   font-size: clamp(1rem, 0.96rem + 0.35vw, 1.2rem);
-  line-height: 1.72;
-  letter-spacing: 0.008em;
+  line-height: 1.62;
+  letter-spacing: 0.003em;
   max-width: 58ch;
   margin: 0 0 1.4rem;
 }
@@ -1233,6 +1249,7 @@ body.dark-mode .send-email-btn img {
 
 /* Heading / typography tweaks */
 h1,h2,h3{
+  font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
   letter-spacing: var(--ls-heading);
   color:var(--heading);
   margin:0;
@@ -1248,11 +1265,12 @@ body.dark-mode #skills .skill-chip {
   border: 1px solid var(--input-border);
 }
 body.dark-mode #skills .skill-icon:not(.skill-icon-text) {
-  filter: none;
+  /* Off-white icon tone for dark mode */
+  filter: grayscale(1) brightness(0) invert(0.92);
 }
-h1{ font-weight:700; font-size:var(--fs-h1) }
-h2{ font-size:var(--fs-h2); font-weight:700 }
-h3{ font-size:var(--fs-h3); font-weight:700 }
+h1{ font-weight:600; font-size:var(--fs-h1) }
+h2{ font-size:var(--fs-h2); font-weight:600 }
+h3{ font-size:var(--fs-h3); font-weight:600 }
 
 p, li, a, button, input, textarea {
   text-wrap: pretty;
@@ -1342,7 +1360,7 @@ p, li, a, button, input, textarea {
   nav ul { padding-top: 24px; }
   nav h1 { font-size:1rem; letter-spacing:1.2px; }
   .mode-switch button { padding:8px 10px; font-size:0.9rem; }
-  #profile h1 { font-size:1.8rem; }
+  #profile h1 { font-size:1.95rem; }
   #profile h2 { font-size:0.95rem; }
   .profile-pic { width:200px; height:200px; margin-bottom:14px; }
   #about-me .about-container { padding:14px; gap:12px; border-radius:14px; }
@@ -1387,7 +1405,7 @@ a, button, .btn, .send-email-btn {
 .site-accent {
   position:fixed; right:20px; bottom:20px; width:86px; height:86px;
   border-radius:22px; box-shadow: 0 20px 60px var(--accent-glow);
-  background: linear-gradient(135deg, rgba(160,0,212,0.18), rgba(255,0,255,0.07));
+  background: linear-gradient(135deg, rgba(140,106,67,0.2), rgba(200,165,116,0.1));
   pointer-events:none;
   opacity:0.95;
   transition:opacity .3s;
