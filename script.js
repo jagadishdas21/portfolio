@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const moonIcon = document.getElementById("moonIcon");
   const body = document.body;
   const STORAGE_KEY = "jeddy_mode";
-  const PAGE_EXIT_MS = 220;
+  const PAGE_EXIT_MS = 90;
 
   // ================== PAGE ENTER / EXIT ==================
   requestAnimationFrame(() => {
@@ -166,6 +166,78 @@ document.addEventListener("DOMContentLoaded", () => {
       const body = encodeURIComponent("Hi Jagadish,\n\nI would like to get in touch with you.");
       const mail = `mailto:jagadishdas.nitrkl@gmail.com?subject=${subject}&body=${body}`;
       window.location.href = mail;
+    });
+  })();
+
+  // ================== CONTACT GMAIL BUTTON ==================
+  (function () {
+    const gmailBtn = document.getElementById("gmailComposeBtn");
+    if (!gmailBtn) return;
+
+    const to = "jagadishdas.nitrkl@gmail.com";
+    const subject = "Project Inquiry";
+    const body = [
+      "Hi Jagadish,",
+      "",
+      "I am reaching out regarding [project type].",
+      "",
+      "My requirements:",
+      "- ",
+      "- ",
+      "",
+      "Timeline: ",
+      "Budget: ",
+      "",
+      "Thanks,",
+      "[Your Name]"
+    ].join("\n");
+
+    const encodedTo = encodeURIComponent(to);
+    const encodedSubject = encodeURIComponent(subject);
+    const encodedBody = encodeURIComponent(body);
+    const gmailWebUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodedTo}&su=${encodedSubject}&body=${encodedBody}`;
+    const mailtoUrl = `mailto:${to}?subject=${encodedSubject}&body=${encodedBody}`;
+    const gmailIosUrl = `googlegmail:///co?to=${encodedTo}&subject=${encodedSubject}&body=${encodedBody}`;
+    const gmailAndroidIntent =
+      `intent://compose?to=${encodedTo}&subject=${encodedSubject}&body=${encodedBody}` +
+      "#Intent;scheme=mailto;package=com.google.android.gm;end";
+
+    gmailBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const ua = navigator.userAgent || "";
+      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const isAndroid = /Android/i.test(ua);
+
+      // Desktop/laptop: keep direct compose in Gmail web.
+      if (!isIOS && !isAndroid) {
+        window.open(gmailWebUrl, "_blank", "noopener,noreferrer");
+        return;
+      }
+
+      // Mobile: try Gmail app first, then mailto fallback, then Gmail web.
+      const fallbackToMailto = window.setTimeout(() => {
+        window.location.href = mailtoUrl;
+      }, 450);
+
+      const fallbackToWeb = window.setTimeout(() => {
+        window.open(gmailWebUrl, "_blank", "noopener,noreferrer");
+      }, 1100);
+
+      const cancelFallbacks = () => {
+        window.clearTimeout(fallbackToMailto);
+        window.clearTimeout(fallbackToWeb);
+      };
+
+      window.addEventListener("pagehide", cancelFallbacks, { once: true });
+      window.addEventListener("blur", cancelFallbacks, { once: true });
+
+      if (isIOS) {
+        window.location.href = gmailIosUrl;
+        return;
+      }
+
+      window.location.href = gmailAndroidIntent;
     });
   })();
 

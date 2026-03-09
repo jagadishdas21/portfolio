@@ -1,5 +1,4 @@
-/* Josefin Sans - used sitewide */
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap');
+/* Josefin Sans is loaded via <link> in HTML for faster first paint */
 
 :root{
   /* Light mode palette (default) */
@@ -67,24 +66,18 @@ body{
   font-feature-settings: "kern" 1, "liga" 1, "clig" 1;
   overflow-x:hidden;
   padding-bottom: 80px;
-  opacity: 0;
-  transform: translateY(6px);
   transition:
-    opacity var(--dur-base) var(--ease-standard),
-    transform var(--dur-base) var(--ease-standard),
     background var(--dur-slow) var(--ease-standard),
     color var(--dur-slow) var(--ease-standard);
 }
 
-body.page-ready {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 body.page-leaving {
   opacity: 0;
-  transform: translateY(4px);
+  transform: translateY(2px);
   pointer-events: none;
+  transition:
+    opacity 120ms var(--ease-standard),
+    transform 120ms var(--ease-standard);
 }
 
 p {
