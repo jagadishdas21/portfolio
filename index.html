@@ -6,11 +6,19 @@
   <title>Jagadish Das</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap">
   <link rel="icon" type="image/png" sizes="32x32" href="images/icon.png">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("jeddy_mode");
+        if (saved !== "light") document.documentElement.classList.add("dark-mode");
+      } catch (e) {}
+    })();
+  </script>
 </head>
-<body>
+<body class="dark-mode">
   <nav class="navbar">
     <a class="logo" href="index.html" aria-label="Go to Profile home page">JEDDY</a>
     <ul class="nav-links" id="navLinks">
@@ -32,23 +40,41 @@
     </div>
   </nav>
 
-  <section id="profile" class="section">
-    <img src="images/profile.jpg" alt="Jagadish Das" class="profile-pic" fetchpriority="high" decoding="async">
-    <h2>Hi, I'm</h2>
-    <h1>Jagadish Das</h1>
-    <h3 id="typewriter"></h3>
-    <div class="social-icons">
-      <a href="https://www.linkedin.com/in/jagadish-das-811589211/" target="_blank" rel="noopener noreferrer">
-        <img src="images/linkedin.png" alt="LinkedIn">
-      </a>
-      <a href="https://devpost.com/jagadishdas-nitrkl" target="_blank" rel="noopener noreferrer">
-        <img src="images/devpost.svg" alt="Devpost">
-      </a>
-      <a href="https://github.com/jagadishdas21" target="_blank" rel="noopener noreferrer">
-        <img src="images/github.png" alt="GitHub">
-      </a>
+  <section id="profile" class="section home-hero">
+    <div class="hero-grid">
+      <div class="hero-content reveal">
+        <p class="hero-kicker">Hi, I am</p>
+        <h1 class="hero-name">Jagadish Das</h1>
+        <h2 class="hero-role">Creative Technologist</h2>
+        <p class="hero-intro">
+          With 5+ years of experience in video editing and coding, I craft authentic experiences for brands and
+          organizations working across the creative and technology space.
+        </p>
+
+        <div class="hero-social social-icons">
+          <a href="https://www.linkedin.com/in/jagadish-das-811589211/" target="_blank" rel="noopener noreferrer">
+            <img src="images/linkedin.png" alt="LinkedIn">
+          </a>
+          <a href="https://devpost.com/jagadishdas-nitrkl" target="_blank" rel="noopener noreferrer">
+            <img src="images/devpost.svg" alt="Devpost">
+          </a>
+          <a href="https://github.com/jagadishdas21" target="_blank" rel="noopener noreferrer">
+            <img src="images/github.png" alt="GitHub">
+          </a>
+        </div>
+
+        <a class="btn hero-cta" href="about.html">Let’s get started →</a>
+      </div>
+
+      <div class="hero-portrait reveal">
+        <div class="portrait-ring" aria-hidden="true"></div>
+        <div class="hero-avatar">
+          <img src="images/profile.jpg" alt="Jagadish Das" class="profile-pic hero-pic" fetchpriority="high" decoding="async">
+        </div>
+      </div>
     </div>
   </section>
+
 
   <footer>
     <p>&copy; 2026 All Right Reserved | Designed and developed by Jagadish Das</p>

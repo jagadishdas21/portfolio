@@ -6,11 +6,19 @@
   <title>Jagadish Das</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap">
   <link rel="icon" type="image/png" sizes="32x32" href="images/icon.png">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("jeddy_mode");
+        if (saved !== "light") document.documentElement.classList.add("dark-mode");
+      } catch (e) {}
+    })();
+  </script>
 </head>
-<body>
+<body class="dark-mode">
   <nav class="navbar">
     <a class="logo" href="index.html" aria-label="Go to Profile home page">JEDDY</a>
     <ul class="nav-links" id="navLinks">
@@ -35,7 +43,7 @@
   <main class="site-wrapper">
     <section id="skills" class="section">
       <div class="skills-shell reveal">
-        <h2>My Interests Lies In</h2>
+        <h2>Creative Skills</h2>
 
         <div class="skills-group">
           <div class="skills-grid">
@@ -62,10 +70,6 @@
             <article class="skill-chip">
               <img class="skill-icon" src="https://api.iconify.design/mdi:animation-outline.svg?color=%237a5cff" alt="Animation">
               <span>Animation</span>
-            </article>
-            <article class="skill-chip">
-              <img class="skill-icon" src="https://api.iconify.design/mdi:vector-square.svg?color=%237a5cff" alt="Design">
-              <span>Design</span>
             </article>
           </div>
         </div>
@@ -97,14 +101,97 @@
               <img class="skill-icon" src="https://cdn.simpleicons.org/figma/F24E1E" alt="Figma">
               <span>Figma</span>
             </article>
+          </div>
+        </div>
+
+        <div class="skills-group">
+          <h2 class="skills-major">Technical Skills</h2>
+          <div class="skills-grid">
             <article class="skill-chip">
-              <img class="skill-icon" src="https://api.iconify.design/simple-icons:canva.svg?color=%2300C4CC" alt="Canva">
-              <span>Canva</span>
+              <img class="skill-icon" src="https://cdn-icons-png.flaticon.com/512/18337/18337835.png" alt="Artificial Intelligence">
+              <span>Artificial Intelligence</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn-icons-png.flaticon.com/512/9240/9240330.png" alt="Machine Learning">
+              <span>Machine Learning</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn-icons-png.flaticon.com/512/2103/2103718.png" alt="Deep Learning">
+              <span>Deep Learning</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn-icons-png.flaticon.com/512/11377/11377754.png" alt="Computer Vision">
+              <span>Computer Vision</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://api.iconify.design/mdi:web.svg?color=%237a5cff" alt="Web Development">
+              <span>Web Development</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://api.iconify.design/mdi:database-search.svg?color=%237a5cff" alt="Data Science">
+              <span>Data Science</span>
+            </article>
+          </div>
+        </div>
+
+        <div class="skills-group">
+          <h3>Tools I Use</h3>
+          <div class="skills-grid">
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/python/3776AB" alt="Python">
+              <span>Python</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/postgresql/4169E1" alt="SQL">
+              <span>SQL</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="JavaScript">
+              <span>JavaScript</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/opencv/5C3EE8" alt="OpenCV">
+              <span>OpenCV</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/numpy/013243" alt="NumPy">
+              <span>NumPy</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/pandas/150458" alt="Pandas">
+              <span>Pandas</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/plotly/3F4F75" alt="Matplotlib">
+              <span>Matplotlib</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/scikitlearn/F7931E" alt="Scikit Learn">
+              <span>Scikit Learn</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/tensorflow/FF6F00" alt="TensorFlow">
+              <span>TensorFlow</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/pytorch/EE4C2C" alt="PyTorch">
+              <span>PyTorch</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/jupyter/F37626" alt="Jupyter">
+              <span>Jupyter</span>
+            </article>
+            <article class="skill-chip">
+              <img class="skill-icon" src="https://cdn.simpleicons.org/github/181717" alt="GitHub">
+              <span>GitHub</span>
             </article>
           </div>
         </div>
       </div>
     </section>
+    <div class="page-nav">
+      <a class="btn page-next" href="projects.html">Next →</a>
+    </div>
   </main>
 
   <footer>

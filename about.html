@@ -6,11 +6,19 @@
   <title>Jagadish Das</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap">
   <link rel="icon" type="image/png" sizes="32x32" href="images/icon.png">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("jeddy_mode");
+        if (saved !== "light") document.documentElement.classList.add("dark-mode");
+      } catch (e) {}
+    })();
+  </script>
 </head>
-<body class="about-page">
+<body class="about-page dark-mode">
   <nav class="navbar">
     <a class="logo" href="index.html" aria-label="Go to Profile home page">JEDDY</a>
     <ul class="nav-links" id="navLinks">
@@ -58,6 +66,9 @@
         </div>
       </div>
     </section>
+    <div class="page-nav">
+      <a class="btn page-next" href="skills.html">Next →</a>
+    </div>
   </main>
 
   <footer>

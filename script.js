@@ -55,22 +55,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ================== DARK / LIGHT MODE ==================
   if (modeToggle && sunIcon && moonIcon) {
-    // Apply saved theme
+    // Apply saved theme (default to dark)
     const savedMode = localStorage.getItem(STORAGE_KEY);
-    if (savedMode === "dark") {
-      body.classList.add("dark-mode");
-      sunIcon.style.opacity = "0";
-      moonIcon.style.opacity = "1";
-    } else {
-      sunIcon.style.opacity = "1";
-      moonIcon.style.opacity = "0";
-    }
+    const startDark = savedMode !== "light";
+    body.classList.toggle("dark-mode", startDark);
+    // Show the opposite mode icon as the action affordance.
+    sunIcon.style.opacity = startDark ? "1" : "0";
+    moonIcon.style.opacity = startDark ? "0" : "1";
 
     // Toggle theme
     modeToggle.addEventListener("click", () => {
       const isDark = body.classList.toggle("dark-mode");
-      sunIcon.style.opacity = isDark ? "0" : "1";
-      moonIcon.style.opacity = isDark ? "1" : "0";
+      sunIcon.style.opacity = isDark ? "1" : "0";
+      moonIcon.style.opacity = isDark ? "0" : "1";
       localStorage.setItem(STORAGE_KEY, isDark ? "dark" : "light");
     });
   }
@@ -255,6 +252,36 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { threshold: 0.2 });
 
     reveals.forEach(el => observer.observe(el));
+  })();
+
+  // ================== FILM FILTERS ==================
+  (function () {
+    const filterBar = document.querySelector(".film-filters");
+    if (!filterBar) return;
+
+    const buttons = filterBar.querySelectorAll(".filter-btn");
+    const cards = document.querySelectorAll(".film-card[data-category]");
+
+    const applyFilter = (filter) => {
+      cards.forEach((card) => {
+        const category = card.getAttribute("data-category");
+        const show = filter === "all" || category === filter;
+        card.classList.toggle("is-hidden", !show);
+      });
+    };
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const filter = btn.getAttribute("data-filter");
+        buttons.forEach((b) => {
+          b.classList.toggle("active", b === btn);
+          b.setAttribute("aria-selected", String(b === btn));
+        });
+        applyFilter(filter);
+      });
+    });
+
+    applyFilter("all");
   })();
 
   // ================== FILM POSTER TO PLAYER ==================
