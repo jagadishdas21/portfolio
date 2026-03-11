@@ -776,7 +776,9 @@ body.about-page .site-wrapper {
 }
 
 #about-me .about-minimal-wrap {
-  max-width: 780px;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 #about-me.about-minimal h2 {
@@ -827,9 +829,138 @@ body.about-page .site-wrapper {
   margin-bottom: 0.3rem;
 }
 
+/* About page split layout (desktop) */
+#about-me .about-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+  grid-template-areas:
+    "left image"
+    "copy image"
+    "cards cards";
+  column-gap: clamp(3.6rem, 8vw, 6.4rem);
+  row-gap: 1.2rem;
+  align-items: start;
+}
+
+#about-me .about-left {
+  grid-area: left;
+  max-width: 560px;
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+}
+
+#about-me .about-media {
+  grid-area: image;
+  position: relative;
+  align-self: start;
+  justify-self: end;
+  width: min(460px, 41vw);
+  padding: 10px;
+  border-radius: calc(var(--radius) + 6px);
+  background:
+    radial-gradient(120% 120% at 10% 10%, rgba(140,106,67,0.18), transparent 55%),
+    linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.35));
+  border: 1px solid rgba(140,106,67,0.12);
+  box-shadow:
+    0 0 0 1px rgba(140,106,67,0.08),
+    0 18px 40px rgba(45,40,34,0.12);
+  line-height: 0;
+}
+
+body.dark-mode #about-me .about-media {
+  background:
+    radial-gradient(120% 120% at 10% 10%, rgba(200,165,116,0.18), transparent 55%),
+    linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border-color: rgba(200,165,116,0.18);
+  box-shadow:
+    0 0 0 1px rgba(200,165,116,0.12),
+    0 20px 45px rgba(0,0,0,0.35);
+}
+
+#about-me .about-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--input-border);
+  box-shadow: 0 20px 50px rgba(46,26,73,0.18);
+  display: block;
+}
+
+#about-me .about-main-copy {
+  grid-area: copy;
+  max-width: 560px;
+  margin-top: 0;
+}
+
+#about-me .about-split .panel {
+  grid-area: cards;
+  margin-top: clamp(1rem, 2vw, 1.6rem);
+  justify-content: flex-start;
+  gap: 1.2rem;
+}
+
+#about-me .info-card {
+  width: min(320px, 100%);
+}
+
+@media (min-width: 981px) {
+  #about-me .about-split .panel {
+    flex-wrap: nowrap;
+  }
+
+  #about-me .about-left {
+    margin-left: -28px;
+  }
+
+  #about-me .about-main-copy {
+    margin-left: -28px;
+    margin-top: -0.9rem;
+  }
+
+  #about-me .about-media {
+    transform: translateX(68px);
+  }
+}
+
+@media (max-width: 980px) {
+  #about-me .about-split {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "left"
+      "image"
+      "copy"
+      "cards";
+    gap: 1.6rem;
+    row-gap: 1.6rem;
+  }
+
+  #about-me .about-left,
+  #about-me .about-main-copy {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  #about-me .about-media {
+    width: 100%;
+    justify-self: stretch;
+    margin: 0;
+    padding: 8px;
+  }
+
+  #about-me .info-card {
+    width: 100%;
+  }
+
+  #about-me .about-img {
+    max-height: min(420px, 88vw);
+  }
+}
+
 #about-me .about-subline {
   color: var(--text-secondary);
-  font-size: clamp(1.34rem, 1.2rem + 0.5vw, 1.68rem);
+  font-size: clamp(1.26rem, 1.14rem + 0.45vw, 1.56rem);
   line-height: 1.58;
   letter-spacing: 0.005em;
   margin-bottom: 1.8rem;
@@ -837,7 +968,7 @@ body.about-page .site-wrapper {
 
 #about-me .about-main-copy {
   color: var(--text-primary);
-  font-size: clamp(1.18rem, 1.06rem + 0.36vw, 1.38rem);
+  font-size: clamp(1.08rem, 1rem + 0.32vw, 1.28rem);
   line-height: 1.68;
   letter-spacing: 0.003em;
   max-width: 72ch;
@@ -1017,8 +1148,8 @@ body.dark-mode .info-card img.info {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  min-height: 72px;
-  padding: 0.9rem 1.1rem;
+  min-height: 80px;
+  padding: 1.05rem 1.25rem;
   border-radius: 12px;
   background: var(--card);
   border: 1px solid var(--input-border);
@@ -1033,6 +1164,10 @@ body.dark-mode .info-card img.info {
   font-size: 1.16rem;
   letter-spacing: 0.008em;
   line-height: 1.35;
+}
+
+#skills .skill-chip .ai-text {
+  font-size: 1.08rem;
 }
 
 #skills .skill-icon {
@@ -2024,6 +2159,47 @@ nav .nav-links a,
 body.dark-mode #profile.home-hero .hero-avatar {
   box-shadow: 0 10px 30px rgba(0,0,0,0.18);
   border-color: rgba(200,165,116,0.35);
+}
+
+/* Home hero profile photo: warm, light-palette-tuned tone in light mode */
+#profile.home-hero .hero-pic {
+  filter: sepia(12%) saturate(110%) brightness(1.04) contrast(0.98);
+}
+
+#profile.home-hero .hero-avatar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(226, 217, 206, 0.36);
+  mix-blend-mode: soft-light;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+#profile.home-hero .hero-avatar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 45% 32%,
+      rgba(245,235,220,0.78) 0%,
+      rgba(245,235,220,0.28) 34%,
+      rgba(245,235,220,0) 62%);
+  mix-blend-mode: screen;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+body.dark-mode #profile.home-hero .hero-pic {
+  filter: none;
+}
+
+body.dark-mode #profile.home-hero .hero-avatar::before {
+  opacity: 0;
+}
+
+body.dark-mode #profile.home-hero .hero-avatar::after {
+  opacity: 0;
 }
 
 @media (max-width: 860px) {
