@@ -5,8 +5,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const sunIcon = document.getElementById("sunIcon");
   const moonIcon = document.getElementById("moonIcon");
   const body = document.body;
+  const profilePics = document.querySelectorAll(".profile-pic");
   const STORAGE_KEY = "jeddy_mode";
   const PAGE_EXIT_MS = 90;
+  const LIGHT_PROFILE_SRC = "images/bnw.jpeg";
+  const DARK_PROFILE_SRC = "images/profilepic.jpeg";
+
+  const setProfileSrc = (isDark) => {
+    if (!profilePics.length) return;
+    const src = isDark ? DARK_PROFILE_SRC : LIGHT_PROFILE_SRC;
+    profilePics.forEach((img) => {
+      img.src = src;
+    });
+  };
 
   // ================== PAGE ENTER / EXIT ==================
   requestAnimationFrame(() => {
@@ -59,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedMode = localStorage.getItem(STORAGE_KEY);
     const startDark = savedMode !== "light";
     body.classList.toggle("dark-mode", startDark);
+    setProfileSrc(startDark);
     // Show the opposite mode icon as the action affordance.
     sunIcon.style.opacity = startDark ? "1" : "0";
     moonIcon.style.opacity = startDark ? "0" : "1";
@@ -69,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sunIcon.style.opacity = isDark ? "1" : "0";
       moonIcon.style.opacity = isDark ? "0" : "1";
       localStorage.setItem(STORAGE_KEY, isDark ? "dark" : "light");
+      setProfileSrc(isDark);
     });
   }
 
