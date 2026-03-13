@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const STORAGE_KEY = "jeddy_mode";
   const PAGE_EXIT_MS = 90;
   const LIGHT_PROFILE_SRC = "images/bnw.jpeg";
-  const DARK_PROFILE_SRC = "images/profilepic.jpeg";
+  const DARK_PROFILE_SRC = "images/bnw.jpeg";
 
   const setProfileSrc = (isDark) => {
     if (!profilePics.length) return;
