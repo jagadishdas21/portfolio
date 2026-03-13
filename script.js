@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sendEmailBtn.addEventListener("click", () => {
       const subject = encodeURIComponent("Inquiry regarding services");
       const body = encodeURIComponent("Hi Jagadish,\n\nI would like to get in touch with you.");
-      const mail = `mailto:jagadishdas.nitrkl@gmail.com?subject=${subject}&body=${body}`;
+      const mail = `mailto:hello.jeddyworks@gmail.com?subject=${subject}&body=${body}`;
       window.location.href = mail;
     });
   })();
@@ -184,21 +184,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const gmailBtn = document.getElementById("gmailComposeBtn");
     if (!gmailBtn) return;
 
-    const to = "jagadishdas.nitrkl@gmail.com";
+    const to = "hello.jeddyworks@gmail.com";
     const subject = "Project Inquiry";
     const body = [
-      "Hi Jagadish,",
+      "Dear Jagadish,",
       "",
-      "I am reaching out regarding [project type].",
+      "I hope you're doing well. I'm reaching out about a potential [project type] and would like to discuss how we can work together.",
       "",
-      "My requirements:",
-      "- ",
-      "- ",
+      "Project overview:",
+      "- [summary]",
+      "- [requirements]",
       "",
-      "Timeline: ",
-      "Budget: ",
+      "Timeline: [desired timeline]",
+      "Budget: [budget range, if any]",
       "",
-      "Thanks,",
+      "Please let me know a convenient time to connect, or feel free to suggest next steps.",
+      "",
+      "Regards,",
       "[Your Name]"
     ].join("\n");
 
