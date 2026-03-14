@@ -127,7 +127,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const roles = [
       "Creative Technologist",
       "Video Editor",
-      "Cinematographer"
+      "Cinematographer",
+      "AI Filmmaker"
     ];
 
     let index = 0;
