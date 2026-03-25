@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const profilePics = document.querySelectorAll(".profile-pic");
   const STORAGE_KEY = "jeddy_mode";
   const PAGE_EXIT_MS = 90;
-  const LIGHT_PROFILE_SRC = "images/bnw.jpeg";
-  const DARK_PROFILE_SRC = "images/bnw.jpeg";
+  const LIGHT_PROFILE_SRC = "images/profile.jpeg";
+  const DARK_PROFILE_SRC = "images/profile.jpeg";
 
   const setProfileSrc = (isDark) => {
     if (!profilePics.length) return;
@@ -125,10 +125,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ================== TYPEWRITER ANIMATION ==================
   (function () {
     const roles = [
-      "Creative Technologist",
       "Video Editor",
-      "Cinematographer",
-      "AI Filmmaker"
+      "Cinematographer", 
+      "Filmmaker"
     ];
 
     let index = 0;
