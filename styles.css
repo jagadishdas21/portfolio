@@ -27,9 +27,13 @@
   --section-pad-x: clamp(0.75rem, 2vw, 2rem);
   --mobile-nav-offset: 84px;
   --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.18, 0.84, 0.32, 1);
   --dur-fast: 180ms;
   --dur-base: 260ms;
   --dur-slow: 340ms;
+  --page-dur: 1200ms;
+  --reveal-dur: 1400ms;
+  --reveal-delay-base: 120ms;
 }
 
 body.dark-mode {
@@ -71,18 +75,49 @@ body{
     color var(--dur-slow) var(--ease-standard);
 }
 
-body.page-leaving {
+/* Smooth page enter/exit cross-dissolve */
+html.page-enter body {
   opacity: 0;
-  transform: translateY(2px);
+  filter: blur(4px);
+}
+
+html.page-enter.page-enter-active body {
+  animation: pageFadeIn var(--page-dur) var(--ease-smooth) both;
+  will-change: opacity, filter;
+}
+
+html.page-leaving body {
+  animation: pageFadeOut var(--page-dur) var(--ease-smooth) both;
+  will-change: opacity, filter;
   pointer-events: none;
-  transition:
-    opacity 120ms var(--ease-standard),
-    transform 120ms var(--ease-standard);
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; filter: blur(6px); transform: translateY(10px) scale(0.995); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+}
+
+@keyframes pageFadeOut {
+  from { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+  to { opacity: 0; filter: blur(6px); transform: translateY(-8px) scale(0.995); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.page-enter body,
+  html.page-leaving body {
+    animation: none;
+    filter: none;
+  }
 }
 
 p {
   line-height: 1.6;
   letter-spacing: 0.003em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 a,
@@ -1952,6 +1987,11 @@ nav .nav-links a,
 
 /* Tablets (iPad portrait / larger Android tablets) */
 @media (max-width: 860px) {
+  #profile.home-hero {
+    min-height: auto;
+    padding-top: 104px;
+    padding-bottom: 48px;
+  }
   nav ul { gap: 16px; }
   nav .nav-links a { padding: 8px 10px; font-size: 0.92rem; }
   #about-me .about-container { padding: 20px; }
@@ -2284,7 +2324,7 @@ body.dark-mode #profile.home-hero .hero-avatar {
   opacity: 0;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 640px) {
   #profile.home-hero .hero-intro { display: none; }
 }
 
@@ -2373,15 +2413,32 @@ a, button, .btn, .send-email-btn {
 
 /* Scroll reveal base state */
 .reveal {
-  opacity: 0;
-  transform: translateY(40px); /* start slightly below */
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
-/* Active state when element is visible */
 .reveal.active {
   opacity: 1;
+  transform: none;
+}
+
+/* Scroll reveal (only when JS is available) */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  filter: none;
+  will-change: opacity, transform;
+  transition:
+    opacity var(--reveal-dur) var(--ease-smooth),
+    transform var(--reveal-dur) var(--ease-smooth);
+  transition-delay: var(--reveal-delay, var(--reveal-delay-base));
+}
+
+.js-reveal .reveal.active {
+  opacity: 1;
   transform: translateY(0);
+  filter: none;
 }
 
 /* Final home hero alignment + typography polish */
@@ -2711,4 +2768,35 @@ body.dark-mode #profile.home-hero .hero-avatar .profile-pic {
 body.dark-mode #profile.home-hero .hero-avatar {
   background: rgba(255,255,255,0.04);
   border-color: rgba(200,165,116,0.28);
+}
+
+/* Tablet hero alignment (iPad range) */
+@media (min-width: 721px) and (max-width: 1024px) {
+  #profile.home-hero {
+    min-height: auto;
+    padding-top: 120px;
+    padding-bottom: 56px;
+  }
+
+  #profile.home-hero .hero-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    text-align: left;
+  }
+
+  #profile.home-hero .hero-content {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  #profile.home-hero .hero-role,
+  #profile.home-hero .hero-intro {
+    text-align: left;
+  }
+
+  #profile.home-hero .hero-portrait {
+    order: 0;
+    margin: 0;
+    justify-content: center;
+    min-height: 320px;
+  }
 }

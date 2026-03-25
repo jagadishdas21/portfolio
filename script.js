@@ -5,9 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const sunIcon = document.getElementById("sunIcon");
   const moonIcon = document.getElementById("moonIcon");
   const body = document.body;
+  const root = document.documentElement;
   const profilePics = document.querySelectorAll(".profile-pic");
   const STORAGE_KEY = "jeddy_mode";
-  const PAGE_EXIT_MS = 90;
+  const PAGE_EXIT_MS = 1200;
   const LIGHT_PROFILE_SRC = "images/profile.jpeg";
   const DARK_PROFILE_SRC = "images/profile.jpeg";
 
@@ -19,11 +20,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  // ================== PAGE ENTER / EXIT ==================
-  requestAnimationFrame(() => {
-    body.classList.add("page-ready");
-  });
+  // ================== PAGE ENTER ==================
+  if (root.classList.contains("page-enter")) {
+    requestAnimationFrame(() => {
+      root.classList.add("page-enter-active");
+    });
+    window.setTimeout(() => {
+      root.classList.remove("page-enter", "page-enter-active");
+    }, PAGE_EXIT_MS);
+  }
 
+  // ================== PAGE EXIT (SMOOTH NAV) ==================
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a[href]");
     if (!link) return;
@@ -41,13 +48,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Keep external, mail and phone links immediate.
     if (targetUrl.origin !== window.location.origin) return;
     if (targetUrl.protocol === "mailto:" || targetUrl.protocol === "tel:") return;
     if (targetUrl.href === window.location.href) return;
 
     event.preventDefault();
-    body.classList.add("page-leaving");
+
+    if (root.classList.contains("page-leaving")) return;
+    root.classList.add("page-leaving");
+
     window.setTimeout(() => {
       window.location.href = targetUrl.href;
     }, PAGE_EXIT_MS);
@@ -254,19 +263,44 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 
   // ================== SCROLL REVEAL ==================
-  (function() {
-    const reveals = document.querySelectorAll('.reveal');
+  (function () {
+    const reveals = Array.from(document.querySelectorAll(".reveal"));
+    if (!reveals.length) return;
 
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          entry.target.classList.add('active');
-          obs.unobserve(entry.target); // animate only once
-        }
-      });
-    }, { threshold: 0.2 });
+    root.classList.add("js-reveal");
 
-    reveals.forEach(el => observer.observe(el));
+    // Add gentle stagger for card-based sections (projects, films)
+    const staggerTargets = reveals.filter((el) =>
+      el.classList.contains("film-card") ||
+      el.classList.contains("project-card") ||
+      el.classList.contains("info-card")
+    );
+
+    staggerTargets.forEach((el, index) => {
+      const delay = Math.min(index, 12) * 120;
+      el.style.setProperty("--reveal-delay", `${delay}ms`);
+    });
+
+    const activate = (el) => el.classList.add("active");
+
+    if (!("IntersectionObserver" in window)) {
+      reveals.forEach(activate);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            activate(entry.target);
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    reveals.forEach((el) => observer.observe(el));
   })();
 
   // ================== FILM FILTERS ==================
