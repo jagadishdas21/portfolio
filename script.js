@@ -144,6 +144,56 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ================== TYPEWRITER (HOME HERO) ==================
+  (function () {
+    const typeEl = document.getElementById("typewriter");
+    if (!typeEl) return;
+
+    const prefersReducedMotion = window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const wordsAttr = typeEl.getAttribute("data-words");
+    const words = (wordsAttr ? wordsAttr.split("|") : ["Video Editor", "Cinematographer", "Filmmaker"])
+      .map((word) => word.trim())
+      .filter(Boolean);
+
+    if (!words.length) return;
+    if (prefersReducedMotion) {
+      typeEl.textContent = words[0];
+      return;
+    }
+
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const typingSpeed = 85;
+    const deleteSpeed = 55;
+    const pauseDelay = 1200;
+
+    const tick = () => {
+      const currentWord = words[wordIndex];
+      if (!isDeleting) {
+        charIndex += 1;
+        typeEl.textContent = currentWord.slice(0, charIndex);
+        if (charIndex === currentWord.length) {
+          isDeleting = true;
+          window.setTimeout(tick, pauseDelay);
+          return;
+        }
+      } else {
+        charIndex -= 1;
+        typeEl.textContent = currentWord.slice(0, charIndex);
+        if (charIndex === 0) {
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+        }
+      }
+
+      window.setTimeout(tick, isDeleting ? deleteSpeed : typingSpeed);
+    };
+
+    tick();
+  })();
+
   // ================== SEND EMAIL BUTTON ==================
   (function () {
     const sendEmailBtn = document.getElementById("sendEmailBtn");
