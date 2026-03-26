@@ -8,9 +8,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const root = document.documentElement;
   const profilePics = document.querySelectorAll(".profile-pic");
   const STORAGE_KEY = "jeddy_mode";
-  const PAGE_EXIT_MS = 1200;
   const LIGHT_PROFILE_SRC = "images/profile.jpeg";
   const DARK_PROFILE_SRC = "images/profile.jpeg";
+
+  const readMs = (value, fallback) => {
+    const raw = String(value || "").trim();
+    if (!raw) return fallback;
+    const msMatch = raw.match(/^([\d.]+)ms$/);
+    if (msMatch) return Number(msMatch[1]);
+    const sMatch = raw.match(/^([\d.]+)s$/);
+    if (sMatch) return Number(sMatch[1]) * 1000;
+    const num = Number(raw);
+    return Number.isFinite(num) ? num : fallback;
+  };
+
+  const PAGE_ENTER_MS = readMs(getComputedStyle(root).getPropertyValue("--page-enter-dur"), 900);
+  const PAGE_EXIT_MS = readMs(getComputedStyle(root).getPropertyValue("--page-exit-dur"), 500);
+  const REVEAL_DUR_MS = readMs(getComputedStyle(root).getPropertyValue("--reveal-dur"), 900);
+  const REVEAL_DELAY_BASE_MS = readMs(getComputedStyle(root).getPropertyValue("--reveal-delay-base"), 90);
 
   const setProfileSrc = (isDark) => {
     if (!profilePics.length) return;
@@ -27,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     window.setTimeout(() => {
       root.classList.remove("page-enter", "page-enter-active");
-    }, PAGE_EXIT_MS);
+    }, PAGE_ENTER_MS);
   }
 
   // ================== PAGE EXIT (SMOOTH NAV) ==================
@@ -72,6 +87,31 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // ================== PREFETCH INTERNAL PAGES ==================
+  (function () {
+    const pages = ["index.html", "about.html", "skills.html", "projects.html", "contact.html"];
+    const current = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+    const toPrefetch = pages.filter((page) => page !== current);
+    if (!toPrefetch.length) return;
+
+    const prefetch = () => {
+      toPrefetch.forEach((href) => {
+        if (document.querySelector(`link[rel="prefetch"][href="${href}"]`)) return;
+        const link = document.createElement("link");
+        link.rel = "prefetch";
+        link.as = "document";
+        link.href = href;
+        document.head.appendChild(link);
+      });
+    };
+
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(prefetch, { timeout: 1500 });
+    } else {
+      window.setTimeout(prefetch, 800);
+    }
+  })();
 
   // ================== DARK / LIGHT MODE ==================
   if (modeToggle && sunIcon && moonIcon) {
@@ -277,11 +317,26 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     staggerTargets.forEach((el, index) => {
-      const delay = Math.min(index, 12) * 120;
+      const delay = Math.min(index, 10) * REVEAL_DELAY_BASE_MS;
       el.style.setProperty("--reveal-delay", `${delay}ms`);
     });
 
-    const activate = (el) => el.classList.add("active");
+    const clearWillChange = (el) => {
+      if (el.dataset.revealCleared === "true") return;
+      el.dataset.revealCleared = "true";
+      el.style.willChange = "auto";
+    };
+
+    const activate = (el) => {
+      el.classList.add("active");
+      el.addEventListener("transitionend", () => clearWillChange(el), { once: true });
+      window.setTimeout(() => clearWillChange(el), REVEAL_DUR_MS + 120);
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      reveals.forEach(activate);
+      return;
+    }
 
     if (!("IntersectionObserver" in window)) {
       reveals.forEach(activate);
@@ -297,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
       },
-      { threshold: 0.18, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.08, rootMargin: "0px 0px 8% 0px" }
     );
 
     reveals.forEach((el) => observer.observe(el));
