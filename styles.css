@@ -31,10 +31,10 @@
   --dur-fast: 180ms;
   --dur-base: 260ms;
   --dur-slow: 340ms;
-  --page-enter-dur: 1000ms;
-  --page-exit-dur: 520ms;
-  --reveal-dur: 1400ms;
-  --reveal-delay-base: 80ms;
+  --page-enter-dur: 700ms;
+  --page-exit-dur: 300ms;
+  --reveal-dur: 900ms;
+  --reveal-delay-base: 60ms;
 }
 
 body.dark-mode {
@@ -2998,4 +2998,16 @@ body.dark-mode #profile.home-hero .hero-avatar {
   #profile.home-hero .hero-intro {
     text-align: left !important;
   }
+}
+
+/* Motionless mode: remove all animations/transitions for faster, simpler rendering */
+html {
+  scroll-behavior: auto;
+}
+
+*,
+*::before,
+*::after {
+  animation: none !important;
+  transition: none !important;
 }

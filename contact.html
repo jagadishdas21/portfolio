@@ -6,6 +6,7 @@
   <title>Jagadish Das</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.iconify.design">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap">
   <link rel="icon" type="image/png" sizes="32x32" href="images/jd.png">
   <link rel="stylesheet" href="styles.css">
@@ -15,8 +16,6 @@
         var saved = localStorage.getItem("jeddy_mode");
         if (saved !== "light") document.documentElement.classList.add("dark-mode");
       } catch (e) {}
-      document.documentElement.classList.add("page-enter");
-      document.documentElement.classList.add("js-reveal");
     })();
   </script>
 </head>
@@ -53,7 +52,7 @@
             <h3>Schedule a Meeting</h3>
             <p>Book a quick call with me to discuss your project.</p>
             <a class="contact-action-btn" href="https://calendar.google.com/calendar/u/0/r/eventedit?vcon=meet&add=hello.jeddyworks@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Schedule on Google Meet">
-              <img src="https://api.iconify.design/logos:google-meet.svg" alt="Google Meet">
+              <img src="https://api.iconify.design/logos:google-meet.svg" alt="Google Meet" loading="lazy" decoding="async">
               <span class="contact-btn-label">Meet</span>
             </a>
           </div>
@@ -67,7 +66,7 @@
               rel="noopener noreferrer"
               class="contact-action-btn"
             >
-              <img src="https://api.iconify.design/logos:google-gmail.svg" alt="Gmail Icon">
+              <img src="https://api.iconify.design/logos:google-gmail.svg" alt="Gmail Icon" loading="lazy" decoding="async">
               <span class="contact-btn-label">Gmail</span>
             </a>
           </div>

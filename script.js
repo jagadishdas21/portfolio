@@ -5,27 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const sunIcon = document.getElementById("sunIcon");
   const moonIcon = document.getElementById("moonIcon");
   const body = document.body;
-  const root = document.documentElement;
   const profilePics = document.querySelectorAll(".profile-pic");
   const STORAGE_KEY = "jeddy_mode";
   const LIGHT_PROFILE_SRC = "images/profile.jpeg";
   const DARK_PROFILE_SRC = "images/profile.jpeg";
-
-  const readMs = (value, fallback) => {
-    const raw = String(value || "").trim();
-    if (!raw) return fallback;
-    const msMatch = raw.match(/^([\d.]+)ms$/);
-    if (msMatch) return Number(msMatch[1]);
-    const sMatch = raw.match(/^([\d.]+)s$/);
-    if (sMatch) return Number(sMatch[1]) * 1000;
-    const num = Number(raw);
-    return Number.isFinite(num) ? num : fallback;
-  };
-
-  const PAGE_ENTER_MS = readMs(getComputedStyle(root).getPropertyValue("--page-enter-dur"), 900);
-  const PAGE_EXIT_MS = readMs(getComputedStyle(root).getPropertyValue("--page-exit-dur"), 500);
-  const REVEAL_DUR_MS = readMs(getComputedStyle(root).getPropertyValue("--reveal-dur"), 900);
-  const REVEAL_DELAY_BASE_MS = readMs(getComputedStyle(root).getPropertyValue("--reveal-delay-base"), 90);
 
   const setProfileSrc = (isDark) => {
     if (!profilePics.length) return;
@@ -34,48 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
       img.src = src;
     });
   };
-
-  // ================== PAGE ENTER ==================
-  if (root.classList.contains("page-enter")) {
-    requestAnimationFrame(() => {
-      root.classList.add("page-enter-active");
-    });
-    window.setTimeout(() => {
-      root.classList.remove("page-enter", "page-enter-active");
-    }, PAGE_ENTER_MS);
-  }
-
-  // ================== PAGE EXIT (SMOOTH NAV) ==================
-  document.addEventListener("click", (event) => {
-    const link = event.target.closest("a[href]");
-    if (!link) return;
-
-    const href = link.getAttribute("href");
-    if (!href || href.startsWith("#")) return;
-    if (link.hasAttribute("download")) return;
-    if (link.target && link.target !== "_self") return;
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-
-    let targetUrl;
-    try {
-      targetUrl = new URL(link.href, window.location.href);
-    } catch {
-      return;
-    }
-
-    if (targetUrl.origin !== window.location.origin) return;
-    if (targetUrl.protocol === "mailto:" || targetUrl.protocol === "tel:") return;
-    if (targetUrl.href === window.location.href) return;
-
-    event.preventDefault();
-
-    if (root.classList.contains("page-leaving")) return;
-    root.classList.add("page-leaving");
-
-    window.setTimeout(() => {
-      window.location.href = targetUrl.href;
-    }, PAGE_EXIT_MS);
-  });
 
   // ================== ACTIVE NAV LINK ==================
   if (navLinks) {
@@ -88,29 +29,61 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ================== PREFETCH INTERNAL PAGES ==================
+  // ================== PREFETCH INTERNAL PAGES (ON DEMAND) ==================
   (function () {
-    const pages = ["index.html", "about.html", "skills.html", "projects.html", "contact.html"];
-    const current = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
-    const toPrefetch = pages.filter((page) => page !== current);
-    if (!toPrefetch.length) return;
-
-    const prefetch = () => {
-      toPrefetch.forEach((href) => {
-        if (document.querySelector(`link[rel="prefetch"][href="${href}"]`)) return;
-        const link = document.createElement("link");
-        link.rel = "prefetch";
-        link.as = "document";
-        link.href = href;
-        document.head.appendChild(link);
-      });
+    const shouldPrefetch = () => {
+      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (!connection) return true;
+      if (connection.saveData) return false;
+      const type = String(connection.effectiveType || "").toLowerCase();
+      if (type.includes("2g")) return false;
+      return true;
     };
 
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(prefetch, { timeout: 1500 });
-    } else {
-      window.setTimeout(prefetch, 800);
-    }
+    if (!shouldPrefetch()) return;
+
+    const seen = new Set();
+
+    const addPrefetch = (href) => {
+      if (!href || seen.has(href)) return;
+      if (document.querySelector(`link[rel="prefetch"][href="${href}"]`)) return;
+      const link = document.createElement("link");
+      link.rel = "prefetch";
+      link.as = "document";
+      link.href = href;
+      document.head.appendChild(link);
+      seen.add(href);
+    };
+
+    const getInternalHref = (link) => {
+      try {
+        const url = new URL(link.getAttribute("href"), window.location.href);
+        if (url.origin !== window.location.origin) return null;
+        if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+        const path = url.pathname.split("/").pop() || "index.html";
+        if (!path.endsWith(".html")) return null;
+        if (url.href === window.location.href) return null;
+        return path;
+      } catch {
+        return null;
+      }
+    };
+
+    const warmPrefetch = (link) => {
+      const href = getInternalHref(link);
+      if (!href) return;
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => addPrefetch(href), { timeout: 800 });
+      } else {
+        window.setTimeout(() => addPrefetch(href), 300);
+      }
+    };
+
+    document.querySelectorAll('a[href$=".html"]').forEach((link) => {
+      link.addEventListener("pointerenter", () => warmPrefetch(link), { passive: true });
+      link.addEventListener("focus", () => warmPrefetch(link));
+      link.addEventListener("touchstart", () => warmPrefetch(link), { passive: true });
+    });
   })();
 
   // ================== DARK / LIGHT MODE ==================
@@ -170,50 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
-  // ================== TYPEWRITER ANIMATION ==================
-  (function () {
-    const roles = [
-      "Video Editor",
-      "Cinematographer", 
-      "Filmmaker"
-    ];
-
-    let index = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    const speed = 100;
-    const eraseSpeed = 60;
-    const delayBetweenWords = 700;
-
-    const typewriterEl = document.getElementById("typewriter");
-    if (!typewriterEl) return;
-
-    function typeEffect() {
-      const current = roles[index];
-      const visibleText = current.substring(0, charIndex);
-      typewriterEl.textContent = visibleText;
-
-      if (!isDeleting && charIndex < current.length) {
-        charIndex++;
-        setTimeout(typeEffect, speed);
-      } else if (isDeleting && charIndex > 0) {
-        charIndex--;
-        setTimeout(typeEffect, eraseSpeed);
-      } else {
-        if (!isDeleting) {
-          isDeleting = true;
-          setTimeout(typeEffect, delayBetweenWords);
-        } else {
-          isDeleting = false;
-          index = (index + 1) % roles.length;
-          setTimeout(typeEffect, 200);
-        }
-      }
-    }
-
-    typeEffect();
-  })();
 
   // ================== SEND EMAIL BUTTON ==================
   (function () {
@@ -300,62 +229,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       window.location.href = gmailAndroidIntent;
     });
-  })();
-
-  // ================== SCROLL REVEAL ==================
-  (function () {
-    const reveals = Array.from(document.querySelectorAll(".reveal"));
-    if (!reveals.length) return;
-
-    root.classList.add("js-reveal");
-
-    // Add gentle stagger for card-based sections (projects, films)
-    const staggerTargets = reveals.filter((el) =>
-      el.classList.contains("film-card") ||
-      el.classList.contains("project-card") ||
-      el.classList.contains("info-card")
-    );
-
-    staggerTargets.forEach((el, index) => {
-      const delay = Math.min(index, 10) * REVEAL_DELAY_BASE_MS;
-      el.style.setProperty("--reveal-delay", `${delay}ms`);
-    });
-
-    const clearWillChange = (el) => {
-      if (el.dataset.revealCleared === "true") return;
-      el.dataset.revealCleared = "true";
-      el.style.willChange = "auto";
-    };
-
-    const activate = (el) => {
-      el.classList.add("active");
-      el.addEventListener("transitionend", () => clearWillChange(el), { once: true });
-      window.setTimeout(() => clearWillChange(el), REVEAL_DUR_MS + 120);
-    };
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      reveals.forEach(activate);
-      return;
-    }
-
-    if (!("IntersectionObserver" in window)) {
-      reveals.forEach(activate);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries, obs) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            activate(entry.target);
-            obs.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.08, rootMargin: "0px 0px 8% 0px" }
-    );
-
-    reveals.forEach((el) => observer.observe(el));
   })();
 
   // ================== FILM FILTERS ==================
