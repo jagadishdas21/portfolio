@@ -3011,3 +3011,152 @@ html {
   animation: none !important;
   transition: none !important;
 }
+
+/* About page: ensure full content is visible without clipping */
+#about-me.about-minimal {
+  min-height: auto;
+  justify-content: flex-start;
+  padding-top: 90px;
+  padding-bottom: 40px;
+}
+
+#about-me .about-accent {
+  margin: 0.6rem 0 1.1rem;
+}
+
+#about-me .about-split .panel {
+  margin-top: 0.8rem;
+}
+
+/* About page: reference-inspired layout (scoped to about page only) */
+body.about-page .site-wrapper {
+  max-width: 1100px;
+}
+
+#about-me.about-ref {
+  min-height: auto;
+  align-items: stretch;
+  text-align: left;
+  padding-top: 60px;
+  padding-bottom: 32px;
+  position: relative;
+}
+
+.about-ref-wrap {
+  width: min(100%, 980px);
+  margin: 0 auto;
+}
+
+.about-ref-top h2 {
+  font-size: clamp(2.3rem, 1.8rem + 2.05vw, 3.35rem);
+  letter-spacing: 0.01em;
+}
+
+.about-ref-accent {
+  display: block;
+  width: 96px;
+  height: 10px;
+  margin: 0.6rem 0 1.1rem;
+  position: relative;
+}
+
+.about-ref-accent::before {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+.about-ref-accent::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: var(--heading);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.about-ref-name {
+  font-size: clamp(1.55rem, 1.32rem + 0.95vw, 2.05rem);
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 0.35rem;
+}
+
+.about-ref-role {
+  font-size: clamp(1.08rem, 1.02rem + 0.35vw, 1.24rem);
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
+
+.about-ref-body {
+  max-width: 62ch;
+  font-size: clamp(1.04rem, 1rem + 0.32vw, 1.18rem);
+  line-height: 1.58;
+  color: var(--text-primary);
+}
+
+.about-ref-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.2rem);
+  margin-top: 1.4rem;
+}
+
+.about-ref-col h3 {
+  font-size: 0.96rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(140,106,67,0.22);
+  margin-bottom: 0.9rem;
+}
+
+body.about-page.dark-mode .about-ref-col h3 {
+  border-bottom-color: rgba(255,255,255,0.12);
+}
+
+.about-ref-col ul {
+  list-style: none;
+  display: grid;
+  gap: 0.7rem;
+  padding: 0;
+  margin: 0;
+}
+
+.about-ref-col li {
+  display: grid;
+  grid-template-columns: 12px 1fr;
+  gap: 0.6rem;
+  align-items: start;
+  color: var(--text-primary);
+  font-size: 1.04rem;
+}
+
+.about-ref-col li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  margin-top: 0.55rem;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+@media (max-width: 860px) {
+  #about-me.about-ref {
+    padding-top: 56px;
+    padding-bottom: 28px;
+  }
+
+  .about-ref-grid {
+    grid-template-columns: 1fr;
+  }
+}

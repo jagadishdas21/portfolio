@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
   const profilePics = document.querySelectorAll(".profile-pic");
   const STORAGE_KEY = "jeddy_mode";
-  const LIGHT_PROFILE_SRC = "images/profile.jpeg";
-  const DARK_PROFILE_SRC = "images/profile.jpeg";
+  const LIGHT_PROFILE_SRC = "images/home.png";
+  const DARK_PROFILE_SRC = "images/home.png";
 
   const setProfileSrc = (isDark) => {
     if (!profilePics.length) return;
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const prefersReducedMotion = window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const wordsAttr = typeEl.getAttribute("data-words");
-    const words = (wordsAttr ? wordsAttr.split("|") : ["Video Editor", "Cinematographer", "Filmmaker"])
+    const words = (wordsAttr ? wordsAttr.split("|") : ["Video Editor", "Cinematographer"])
       .map((word) => word.trim())
       .filter(Boolean);
 
