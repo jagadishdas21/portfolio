@@ -194,90 +194,67 @@ document.addEventListener("DOMContentLoaded", () => {
     tick();
   })();
 
-  // ================== SEND EMAIL BUTTON ==================
+  // ================== CONTACT APP LINKS ==================
   (function () {
-    const sendEmailBtn = document.getElementById("sendEmailBtn");
-    if (!sendEmailBtn) return;
+    const appLinks = document.querySelectorAll("[data-app-link-ios], [data-app-link-android], [data-fallback-link]");
+    if (!appLinks.length) return;
 
-    sendEmailBtn.addEventListener("click", () => {
-      const subject = encodeURIComponent("Inquiry regarding services");
-      const body = encodeURIComponent("Hi Jagadish,\n\nI would like to get in touch with you.");
-      const mail = `mailto:hello.jeddyworks@gmail.com?subject=${subject}&body=${body}`;
-      window.location.href = mail;
-    });
-  })();
+    const ua = navigator.userAgent || "";
+    const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const isAndroid = /Android/i.test(ua);
+    const isMobile = isIOS || isAndroid;
 
-  // ================== CONTACT GMAIL BUTTON ==================
-  (function () {
-    const gmailBtn = document.getElementById("gmailComposeBtn");
-    if (!gmailBtn) return;
+    appLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const fallbackLink = link.getAttribute("data-fallback-link") || link.getAttribute("href");
+        const appLink = isIOS
+          ? (link.getAttribute("data-app-link-ios") || link.getAttribute("data-app-link"))
+          : (link.getAttribute("data-app-link-android") || link.getAttribute("data-app-link"));
 
-    const to = "hello.jeddyworks@gmail.com";
-    const subject = "Project Inquiry";
-    const body = [
-      "Dear Jagadish,",
-      "",
-      "I hope you're doing well. I'm reaching out about a potential [project type] and would like to discuss how we can work together.",
-      "",
-      "Project overview:",
-      "- [summary]",
-      "- [requirements]",
-      "",
-      "Timeline: [desired timeline]",
-      "Budget: [budget range, if any]",
-      "",
-      "Please let me know a convenient time to connect, or feel free to suggest next steps.",
-      "",
-      "Regards,",
-      "[Your Name]"
-    ].join("\n");
+        if (!fallbackLink) return;
 
-    const encodedTo = encodeURIComponent(to);
-    const encodedSubject = encodeURIComponent(subject);
-    const encodedBody = encodeURIComponent(body);
-    const gmailWebUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodedTo}&su=${encodedSubject}&body=${encodedBody}`;
-    const mailtoUrl = `mailto:${to}?subject=${encodedSubject}&body=${encodedBody}`;
-    const gmailIosUrl = `googlegmail:///co?to=${encodedTo}&subject=${encodedSubject}&body=${encodedBody}`;
-    const gmailAndroidIntent =
-      `intent://compose?to=${encodedTo}&subject=${encodedSubject}&body=${encodedBody}` +
-      "#Intent;scheme=mailto;package=com.google.android.gm;end";
+        event.preventDefault();
 
-    gmailBtn.addEventListener("click", (event) => {
-      event.preventDefault();
+        const openInNewTab = link.getAttribute("target") === "_blank";
 
-      const ua = navigator.userAgent || "";
-      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-      const isAndroid = /Android/i.test(ua);
+        if (!isMobile || !appLink) {
+          if (openInNewTab) {
+            window.open(fallbackLink, "_blank", "noopener,noreferrer");
+          } else {
+            window.location.href = fallbackLink;
+          }
+          return;
+        }
 
-      // Desktop/laptop: keep direct compose in Gmail web.
-      if (!isIOS && !isAndroid) {
-        window.open(gmailWebUrl, "_blank", "noopener,noreferrer");
-        return;
-      }
+        const fallbackDelay = 900;
+        let fallbackTimer;
 
-      // Mobile: try Gmail app first, then mailto fallback, then Gmail web.
-      const fallbackToMailto = window.setTimeout(() => {
-        window.location.href = mailtoUrl;
-      }, 450);
+        const cancelFallback = () => {
+          if (fallbackTimer) {
+            window.clearTimeout(fallbackTimer);
+          }
+        };
 
-      const fallbackToWeb = window.setTimeout(() => {
-        window.open(gmailWebUrl, "_blank", "noopener,noreferrer");
-      }, 1100);
+        fallbackTimer = window.setTimeout(() => {
+          if (openInNewTab) {
+            window.open(fallbackLink, "_blank", "noopener,noreferrer");
+          } else {
+            window.location.href = fallbackLink;
+          }
+        }, fallbackDelay);
 
-      const cancelFallbacks = () => {
-        window.clearTimeout(fallbackToMailto);
-        window.clearTimeout(fallbackToWeb);
-      };
+        const cancelOnHidden = () => {
+          if (document.hidden) {
+            cancelFallback();
+          }
+        };
 
-      window.addEventListener("pagehide", cancelFallbacks, { once: true });
-      window.addEventListener("blur", cancelFallbacks, { once: true });
+        window.addEventListener("pagehide", cancelFallback, { once: true });
+        window.addEventListener("blur", cancelFallback, { once: true });
+        document.addEventListener("visibilitychange", cancelOnHidden, { once: true });
 
-      if (isIOS) {
-        window.location.href = gmailIosUrl;
-        return;
-      }
-
-      window.location.href = gmailAndroidIntent;
+        window.location.href = appLink;
+      });
     });
   })();
 
