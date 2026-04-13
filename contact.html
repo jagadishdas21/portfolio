@@ -13,8 +13,16 @@
   <script>
     (function () {
       try {
+        var root = document.documentElement;
+        var reduce = false;
+        if (window.matchMedia) {
+          reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        }
+        if (!reduce) {
+          root.classList.add("page-enter", "js-reveal");
+        }
         var saved = localStorage.getItem("jeddy_mode");
-        if (saved !== "light") document.documentElement.classList.add("dark-mode");
+        if (saved !== "light") root.classList.add("dark-mode");
       } catch (e) {}
     })();
   </script>
@@ -78,8 +86,7 @@
               data-app-link-ios="https://calendar.google.com/calendar/u/0/r/eventedit?vcon=meet&add=hello.jeddyworks@gmail.com"
               data-app-link-android="intent://calendar.google.com/calendar/u/0/r/eventedit?vcon=meet&add=hello.jeddyworks@gmail.com#Intent;scheme=https;package=com.google.android.calendar;end"
               data-fallback-link="https://calendar.google.com/calendar/u/0/r/eventedit?vcon=meet&add=hello.jeddyworks@gmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
+              data-force-web="true"
               aria-label="Schedule a Google Meet"
             >Book a call</a>
           </article>

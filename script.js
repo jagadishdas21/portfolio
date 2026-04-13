@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const STORAGE_KEY = "jeddy_mode";
   const LIGHT_PROFILE_SRC = "images/home.png";
   const DARK_PROFILE_SRC = "images/home.png";
+  const prefersReducedMotion = window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const setProfileSrc = (isDark) => {
     if (!profilePics.length) return;
@@ -86,6 +88,73 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   })();
 
+  // ================== PAGE TRANSITIONS (ENTER/EXIT) ==================
+  (function () {
+    const root = document.documentElement;
+
+    const parseMs = (value, fallback) => {
+      if (!value) return fallback;
+      const v = String(value).trim();
+      if (!v) return fallback;
+      if (v.endsWith("ms")) return Number.parseFloat(v);
+      if (v.endsWith("s")) return Number.parseFloat(v) * 1000;
+      return fallback;
+    };
+
+    if (prefersReducedMotion) {
+      root.classList.remove("page-enter", "page-enter-active", "page-leaving");
+      return;
+    }
+
+    if (root.classList.contains("page-enter")) {
+      requestAnimationFrame(() => root.classList.add("page-enter-active"));
+      const enterDur = parseMs(
+        getComputedStyle(root).getPropertyValue("--page-enter-dur"),
+        700
+      );
+      window.setTimeout(() => {
+        root.classList.remove("page-enter", "page-enter-active");
+      }, enterDur + 60);
+    }
+
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest("a");
+      if (!link) return;
+      if (event.defaultPrevented) return;
+      if (event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (link.hasAttribute("download")) return;
+      const target = link.getAttribute("target");
+      if (target && target !== "_self") return;
+
+      const href = link.getAttribute("href");
+      if (!href || href.startsWith("#")) return;
+
+      let url;
+      try {
+        url = new URL(link.href, window.location.href);
+      } catch {
+        return;
+      }
+
+      if (url.origin !== window.location.origin) return;
+      if (!url.pathname.endsWith(".html")) return;
+      if (url.href === window.location.href) return;
+
+      event.preventDefault();
+      root.classList.add("page-leaving");
+
+      const exitDur = parseMs(
+        getComputedStyle(root).getPropertyValue("--page-exit-dur"),
+        300
+      );
+
+      window.setTimeout(() => {
+        window.location.href = url.href;
+      }, exitDur);
+    });
+  })();
+
   // ================== DARK / LIGHT MODE ==================
   if (modeToggle && sunIcon && moonIcon) {
     // Apply saved theme (default to dark)
@@ -149,8 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const typeEl = document.getElementById("typewriter");
     if (!typeEl) return;
 
-    const prefersReducedMotion = window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const wordsAttr = typeEl.getAttribute("data-words");
     const words = (wordsAttr ? wordsAttr.split("|") : ["Video Editor", "Cinematographer"])
       .map((word) => word.trim())
@@ -194,6 +261,42 @@ document.addEventListener("DOMContentLoaded", () => {
     tick();
   })();
 
+  // ================== SCROLL REVEAL ==================
+  (function () {
+    const reveals = document.querySelectorAll(".reveal");
+    if (!reveals.length) return;
+
+    document.documentElement.classList.add("js-reveal");
+
+    if (prefersReducedMotion) {
+      reveals.forEach((el) => el.classList.add("active"));
+      return;
+    }
+
+    reveals.forEach((el, index) => {
+      const customDelay = el.getAttribute("data-reveal-delay");
+      if (customDelay) {
+        el.style.setProperty("--reveal-delay", customDelay);
+        return;
+      }
+      const delay = Math.min(index, 8) * 80;
+      el.style.setProperty("--reveal-delay", `${delay}ms`);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("active");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -10% 0px" }
+    );
+
+    reveals.forEach((el) => observer.observe(el));
+  })();
+
   // ================== CONTACT APP LINKS ==================
   (function () {
     const appLinks = document.querySelectorAll("[data-app-link-ios], [data-app-link-android], [data-fallback-link]");
@@ -207,6 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
     appLinks.forEach((link) => {
       link.addEventListener("click", (event) => {
         const fallbackLink = link.getAttribute("data-fallback-link") || link.getAttribute("href");
+        const forceWeb = link.getAttribute("data-force-web") === "true";
         const appLink = isIOS
           ? (link.getAttribute("data-app-link-ios") || link.getAttribute("data-app-link"))
           : (link.getAttribute("data-app-link-android") || link.getAttribute("data-app-link"));
@@ -217,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const openInNewTab = link.getAttribute("target") === "_blank";
 
-        if (!isMobile || !appLink) {
+        if (forceWeb || !isMobile || !appLink) {
           if (openInNewTab) {
             window.open(fallbackLink, "_blank", "noopener,noreferrer");
           } else {

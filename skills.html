@@ -14,8 +14,16 @@
   <script>
     (function () {
       try {
+        var root = document.documentElement;
+        var reduce = false;
+        if (window.matchMedia) {
+          reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        }
+        if (!reduce) {
+          root.classList.add("page-enter", "js-reveal");
+        }
         var saved = localStorage.getItem("jeddy_mode");
-        if (saved !== "light") document.documentElement.classList.add("dark-mode");
+        if (saved !== "light") root.classList.add("dark-mode");
       } catch (e) {}
     })();
   </script>
