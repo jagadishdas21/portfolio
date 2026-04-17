@@ -420,6 +420,23 @@ nav .nav-links a.active::after {
   transition: opacity 0.25s ease;
 }
 
+@media (min-width: 981px) {
+  .nav-right {
+    gap: 10px;
+  }
+
+  .mode-toggle {
+    width: calc(var(--nav-logo-height) - 8px);
+    height: calc(var(--nav-logo-height) - 8px);
+    flex: 0 0 calc(var(--nav-logo-height) - 8px);
+  }
+
+  .mode-toggle img {
+    width: 22px;
+    height: 22px;
+  }
+}
+
 /* Light Mode */
 #sunIcon { opacity: 1; }
 #moonIcon { opacity: 0; }
@@ -3192,6 +3209,7 @@ body.dark-mode #contact .contact-simple-card {
   display: grid;
   gap: 0.75rem;
   text-align: left;
+  align-content: start;
   box-shadow: 0 10px 28px rgba(45,40,34,0.08);
 }
 
@@ -3235,46 +3253,69 @@ body.dark-mode #contact .contact-showcase-icon img {
   line-height: 1.5;
 }
 
+#contact .contact-card-address {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  max-width: 26ch;
+}
+
 #contact .contact-card-note {
   font-family: 'Source Sans 3', system-ui, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-size: 0.68rem;
+  line-height: 1.5;
   color: var(--text-secondary);
+}
+
+#contact .contact-card-meta {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(0.76rem, 0.72rem + 0.2vw, 0.88rem);
+  line-height: 1.7;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-variant-numeric: lining-nums;
 }
 
 #contact.contact-showcase .contact-action-btn {
   align-self: flex-start;
-  border: 1px solid rgba(140, 106, 67, 0.28);
-  border-radius: 12px;
-  padding: 0.62rem 1.1rem;
-  min-height: 42px;
-  font-size: 0.9rem;
-  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(140, 106, 67, 0.45);
+  border-radius: 999px;
+  padding: 0.6rem 1.2rem;
+  min-height: 40px;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
   text-transform: none;
   font-family: 'Source Sans 3', system-ui, sans-serif;
-  background: transparent;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.72);
   box-shadow: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 body.dark-mode #contact.contact-showcase .contact-action-btn {
-  border-color: rgba(200, 165, 116, 0.32);
+  border-color: rgba(200, 165, 116, 0.45);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 @media (hover: hover) and (pointer: fine) {
   #contact.contact-showcase .contact-action-btn:hover,
   #contact.contact-showcase .contact-action-btn:focus-visible {
-    border-color: rgba(140, 106, 67, 0.5);
-    background: rgba(140, 106, 67, 0.06);
-    box-shadow: 0 0 0 2px rgba(140, 106, 67, 0.14);
+    transform: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(140,106,67,0.35);
   }
 
   body.dark-mode #contact.contact-showcase .contact-action-btn:hover,
   body.dark-mode #contact.contact-showcase .contact-action-btn:focus-visible {
-    border-color: rgba(200, 165, 116, 0.5);
-    background: rgba(200, 165, 116, 0.08);
-    box-shadow: 0 0 0 2px rgba(200, 165, 116, 0.16);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(140,106,67,0.35);
   }
 }
 
@@ -3284,9 +3325,7 @@ body.dark-mode #contact.contact-showcase .contact-action-btn {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     touch-action: manipulation;
-    border-color: transparent;
     box-shadow: none;
-    transition: none;
   }
 
   #contact.contact-showcase .contact-action-btn:hover,
@@ -3297,8 +3336,8 @@ body.dark-mode #contact.contact-showcase .contact-action-btn {
   body.dark-mode #contact.contact-showcase .contact-action-btn:active,
   body.dark-mode #contact.contact-showcase .contact-action-btn:focus,
   body.dark-mode #contact.contact-showcase .contact-action-btn:focus-visible {
-    background: transparent;
-    border-color: transparent;
+    background: inherit;
+    border-color: inherit;
     box-shadow: none;
     transform: none;
     outline: none;
@@ -3369,14 +3408,25 @@ body.dark-mode #contact.contact-showcase .contact-action-btn {
     line-height: 1.2;
   }
 
+  #contact .contact-card-meta {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    line-height: 1.5;
+  }
+
+  #contact .contact-card-address {
+    font-size: 0.9rem;
+    max-width: 24ch;
+  }
+
   #contact.contact-showcase .contact-action-btn {
     align-self: center;
     justify-content: center;
     min-width: 148px;
-    padding: 0.68rem 1rem;
-    font-size: 0.92rem;
+    padding: 0.58rem 1.12rem;
+    font-size: 0.8rem;
     line-height: 1;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.13em;
   }
 }
 footer {
@@ -4106,7 +4156,6 @@ a.btn:hover,
 .btn:hover,
 .btn-outline:hover,
 .send-email-btn:hover,
-#contact .contact-action-btn:hover,
 #contact .contact-submit:hover,
 #contact .contact-pill:hover,
 #contact .contact-pill-outline:hover,
@@ -4123,7 +4172,6 @@ body.dark-mode a.btn:hover,
 body.dark-mode .btn:hover,
 body.dark-mode .btn-outline:hover,
 body.dark-mode .send-email-btn:hover,
-body.dark-mode #contact .contact-action-btn:hover,
 body.dark-mode #contact .contact-submit:hover,
 body.dark-mode #contact .contact-pill:hover,
 body.dark-mode #contact .contact-pill-outline:hover,
@@ -4770,9 +4818,9 @@ body.about-page .site-wrapper {
 
 .about-ref-role {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 0.96rem;
+  font-size: 1.3rem;
   font-weight: 500;
-  line-height: 1.18;
+  line-height: 1.22;
   letter-spacing: 0.002em;
   text-transform: none;
   color: var(--accent);
