@@ -302,62 +302,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const appLinks = document.querySelectorAll("[data-app-link-ios], [data-app-link-android], [data-fallback-link]");
     if (!appLinks.length) return;
 
-    const ua = navigator.userAgent || "";
-    const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-    const isAndroid = /Android/i.test(ua);
-    const isMobile = isIOS || isAndroid;
-
     appLinks.forEach((link) => {
       link.addEventListener("click", (event) => {
         const fallbackLink = link.getAttribute("data-fallback-link") || link.getAttribute("href");
-        const forceWeb = link.getAttribute("data-force-web") === "true";
-        const appLink = isIOS
-          ? (link.getAttribute("data-app-link-ios") || link.getAttribute("data-app-link"))
-          : (link.getAttribute("data-app-link-android") || link.getAttribute("data-app-link"));
 
         if (!fallbackLink) return;
 
         event.preventDefault();
-
-        const openInNewTab = link.getAttribute("target") === "_blank";
-
-        if (forceWeb || !isMobile || !appLink) {
-          if (openInNewTab) {
-            window.open(fallbackLink, "_blank", "noopener,noreferrer");
-          } else {
-            window.location.href = fallbackLink;
-          }
-          return;
-        }
-
-        const fallbackDelay = 900;
-        let fallbackTimer;
-
-        const cancelFallback = () => {
-          if (fallbackTimer) {
-            window.clearTimeout(fallbackTimer);
-          }
-        };
-
-        fallbackTimer = window.setTimeout(() => {
-          if (openInNewTab) {
-            window.open(fallbackLink, "_blank", "noopener,noreferrer");
-          } else {
-            window.location.href = fallbackLink;
-          }
-        }, fallbackDelay);
-
-        const cancelOnHidden = () => {
-          if (document.hidden) {
-            cancelFallback();
-          }
-        };
-
-        window.addEventListener("pagehide", cancelFallback, { once: true });
-        window.addEventListener("blur", cancelFallback, { once: true });
-        document.addEventListener("visibilitychange", cancelOnHidden, { once: true });
-
-        window.location.href = appLink;
+        window.location.href = fallbackLink;
       });
     });
   })();
@@ -400,15 +352,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const launch = document.getElementById("filmSpotlightLaunch");
     const poster = document.getElementById("filmSpotlightPoster");
     const kicker = document.getElementById("filmSpotlightKicker");
+    const screen = spotlight ? spotlight.querySelector(".film-spotlight-screen") : null;
     const title = spotlight ? spotlight.querySelector(".film-spotlight-title") : null;
     const role = spotlight ? spotlight.querySelector(".film-spotlight-role") : null;
     const cards = document.querySelectorAll(".film-card[data-category]");
     const desktopQuery = window.matchMedia("(min-width: 1025px)");
-    if (!spotlight || !launch || !poster || !kicker || !title || !role || !cards.length) return;
+    if (!spotlight || !launch || !poster || !kicker || !title || !role || !screen || !cards.length) return;
+
+    const launchMarkup = launch.outerHTML;
 
     let activeCard = null;
 
     const getVisibleCards = () => Array.from(cards).filter((card) => !card.classList.contains("is-hidden"));
+
+    const restoreLaunch = () => {
+      screen.innerHTML = launchMarkup;
+      return screen.querySelector(".film-spotlight-launch");
+    };
 
     const fillSpotlight = (card) => {
       if (!card) return;
@@ -421,22 +381,37 @@ document.addEventListener("DOMContentLoaded", () => {
       const cardCategory = card.querySelector(".film-category");
       const cardRole = card.querySelector(".film-role");
       const videoId = card.querySelector(".film-player-wrap")?.getAttribute("data-video-id") || "";
+      const nextLaunch = restoreLaunch();
+      const nextPoster = screen.querySelector(".film-spotlight-poster");
+      const nextKicker = screen.querySelector(".film-spotlight-kicker");
 
-      if (posterImg) {
-        poster.src = posterImg.currentSrc || posterImg.src;
-        poster.alt = posterImg.alt || "";
+      if (posterImg && nextPoster) {
+        nextPoster.src = posterImg.currentSrc || posterImg.src;
+        nextPoster.alt = posterImg.alt || "";
       }
 
       title.textContent = cardTitle ? cardTitle.textContent.trim() : "Selected Project";
-      kicker.textContent = cardCategory ? cardCategory.textContent.trim() : "";
+      if (nextKicker) {
+        nextKicker.textContent = cardCategory ? cardCategory.textContent.trim() : "";
+      }
       role.textContent = cardRole ? cardRole.textContent.trim() : "";
-      launch.setAttribute("data-video-id", videoId);
-      launch.setAttribute("aria-label", `Play ${title.textContent}`);
+      if (nextLaunch) {
+        nextLaunch.setAttribute("data-video-id", videoId);
+        nextLaunch.setAttribute("aria-label", `Play ${title.textContent}`);
+        nextLaunch.addEventListener("click", () => {
+          const currentVideoId = nextLaunch.getAttribute("data-video-id");
+          if (!currentVideoId) return;
 
-      const iframe = spotlight.querySelector("iframe");
-      if (iframe) {
-        iframe.remove();
-        launch.hidden = false;
+          const iframe = document.createElement("iframe");
+          iframe.src = `https://www.youtube.com/embed/${currentVideoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
+          iframe.title = "YouTube video player";
+          iframe.loading = "lazy";
+          iframe.referrerPolicy = "strict-origin-when-cross-origin";
+          iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+          iframe.allowFullscreen = true;
+          screen.innerHTML = "";
+          screen.appendChild(iframe);
+        }, { once: true });
       }
     };
 
@@ -446,21 +421,6 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
         fillSpotlight(card);
       });
-    });
-
-    launch.addEventListener("click", () => {
-      const videoId = launch.getAttribute("data-video-id");
-      if (!videoId) return;
-
-      const iframe = document.createElement("iframe");
-      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
-      iframe.title = "YouTube video player";
-      iframe.loading = "lazy";
-      iframe.referrerPolicy = "strict-origin-when-cross-origin";
-      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-      iframe.allowFullscreen = true;
-      spotlight.querySelector(".film-spotlight-screen").appendChild(iframe);
-      launch.hidden = true;
     });
 
     const syncSpotlight = () => {
@@ -480,109 +440,121 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!reel || !grid) return;
 
     const desktopQuery = window.matchMedia("(min-width: 1025px)");
-    let currentOffset = 0;
-    let targetOffset = 0;
-    let maxOffset = 0;
-    let frameId = 0;
+    const originalCards = Array.from(grid.querySelectorAll(".film-card[data-category]"));
 
-    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-
-    const applyOffset = (value) => {
-      grid.style.setProperty("--films-offset", `${value}px`);
+    const clearClones = () => {
+      grid.querySelectorAll(".film-card.is-clone").forEach((card) => card.remove());
+      grid.classList.remove("is-marquee");
+      grid.style.removeProperty("--films-marquee-shift");
+      grid.style.removeProperty("--films-marquee-duration");
+      grid.style.setProperty("--films-offset", "0px");
     };
 
-    const animate = () => {
-      const diff = targetOffset - currentOffset;
-      if (Math.abs(diff) < 0.4) {
-        currentOffset = targetOffset;
-        applyOffset(currentOffset);
-        frameId = 0;
-        return;
-      }
+    const syncMarquee = () => {
+      clearClones();
 
-      currentOffset += diff * 0.14;
-      applyOffset(currentOffset);
-      frameId = window.requestAnimationFrame(animate);
+      if (!desktopQuery.matches || prefersReducedMotion) return;
+
+      const visibleCards = originalCards.filter((card) => !card.classList.contains("is-hidden"));
+      if (visibleCards.length < 2) return;
+
+      const gap = parseFloat(getComputedStyle(grid).gap || "16") || 16;
+      const originalWidth = visibleCards.reduce((total, card, index) => {
+        return total + card.getBoundingClientRect().width + (index ? gap : 0);
+      }, 0);
+
+      if (originalWidth <= reel.clientWidth) return;
+
+      visibleCards.forEach((card) => {
+        const clone = card.cloneNode(true);
+        clone.classList.add("is-clone");
+        clone.classList.remove("reveal", "active", "is-active");
+        clone.setAttribute("aria-hidden", "true");
+        const launch = clone.querySelector(".film-launch");
+        if (launch) {
+          launch.setAttribute("tabindex", "-1");
+        }
+        grid.appendChild(clone);
+      });
+
+      const duration = Math.max(42, Math.round(originalWidth / 28));
+      grid.style.setProperty("--films-marquee-shift", `${originalWidth}px`);
+      grid.style.setProperty("--films-marquee-duration", `${duration}s`);
+      grid.classList.add("is-marquee");
     };
 
-    const queueAnimation = () => {
-      if (frameId) return;
-      frameId = window.requestAnimationFrame(animate);
-    };
+    window.addEventListener("resize", () => window.requestAnimationFrame(syncMarquee));
+    window.addEventListener("load", syncMarquee, { once: true });
+    window.addEventListener("films:layoutchange", () => window.requestAnimationFrame(syncMarquee));
 
-    const measure = () => {
-      if (!desktopQuery.matches) {
-        currentOffset = 0;
-        targetOffset = 0;
-        maxOffset = 0;
-        applyOffset(0);
-        return;
-      }
-
-      maxOffset = Math.max(0, grid.scrollWidth - reel.clientWidth);
-      currentOffset = clamp(currentOffset, -maxOffset, 0);
-      targetOffset = clamp(targetOffset, -maxOffset, 0);
-      applyOffset(currentOffset);
-    };
-
-    reel.addEventListener("mousemove", (event) => {
-      if (!desktopQuery.matches || maxOffset <= 0) return;
-
-      const bounds = reel.getBoundingClientRect();
-      const ratio = clamp((event.clientX - bounds.left) / bounds.width, 0, 1);
-      targetOffset = -maxOffset * ratio;
-
-      if (prefersReducedMotion) {
-        currentOffset = targetOffset;
-        applyOffset(currentOffset);
-        return;
-      }
-
-      queueAnimation();
-    });
-
-    reel.addEventListener("mouseenter", measure);
-    window.addEventListener("resize", measure);
-    window.addEventListener("load", measure, { once: true });
-    window.addEventListener("films:layoutchange", () => {
-      window.requestAnimationFrame(measure);
-    });
     if (typeof desktopQuery.addEventListener === "function") {
-      desktopQuery.addEventListener("change", measure);
+      desktopQuery.addEventListener("change", syncMarquee);
     } else if (typeof desktopQuery.addListener === "function") {
-      desktopQuery.addListener(measure);
+      desktopQuery.addListener(syncMarquee);
     }
 
-    measure();
+    syncMarquee();
   })();
 
   // ================== FILM POSTER TO PLAYER ==================
   (function () {
     const wraps = document.querySelectorAll(".film-player-wrap[data-video-id]");
     if (!wraps.length) return;
-
     const desktopSpotlight = document.getElementById("filmSpotlight");
+    const desktopQuery = window.matchMedia("(min-width: 1025px)");
 
     wraps.forEach((wrap) => {
+      wrap.dataset.posterMarkup = wrap.innerHTML;
+    });
+
+    const restoreWrap = (wrap) => {
+      if (!wrap || !wrap.dataset.posterMarkup) return;
+      if (!wrap.querySelector("iframe")) return;
+      wrap.innerHTML = wrap.dataset.posterMarkup;
+      bindLaunch(wrap);
+    };
+
+    const restoreOthers = (activeWrap) => {
+      wraps.forEach((wrap) => {
+        if (wrap !== activeWrap) restoreWrap(wrap);
+      });
+    };
+
+    const buildIframe = (videoId) => {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
+      iframe.title = "YouTube video player";
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.allowFullscreen = true;
+      return iframe;
+    };
+
+    function bindLaunch(wrap) {
       const launchBtn = wrap.querySelector(".film-launch");
       const videoId = wrap.getAttribute("data-video-id");
       if (!launchBtn || !videoId) return;
 
-      launchBtn.addEventListener("click", () => {
-        if (desktopSpotlight && window.matchMedia("(min-width: 1025px)").matches) {
+      launchBtn.addEventListener("click", (event) => {
+        if (desktopSpotlight && desktopQuery.matches) {
+          event.preventDefault();
+          const card = wrap.closest(".film-card");
+          if (card) {
+            card.click();
+          }
           return;
         }
 
-        const iframe = document.createElement("iframe");
-        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
-        iframe.title = "YouTube video player";
-        iframe.loading = "lazy";
-        iframe.referrerPolicy = "strict-origin-when-cross-origin";
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-        iframe.allowFullscreen = true;
+        restoreOthers(wrap);
+        const iframe = buildIframe(videoId);
         wrap.innerHTML = "";
         wrap.appendChild(iframe);
       }, { once: true });
+    }
+
+    wraps.forEach((wrap) => {
+      bindLaunch(wrap);
     });
   })();
 });
