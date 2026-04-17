@@ -302,14 +302,46 @@ document.addEventListener("DOMContentLoaded", () => {
     const appLinks = document.querySelectorAll("[data-app-link-ios], [data-app-link-android], [data-fallback-link]");
     if (!appLinks.length) return;
 
+    const ua = navigator.userAgent || navigator.vendor || window.opera || "";
+    const isIOS = /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const isAndroid = /Android/i.test(ua);
+    const isTouchDevice = window.matchMedia &&
+      window.matchMedia("(hover: none), (pointer: coarse)").matches;
+
     appLinks.forEach((link) => {
       link.addEventListener("click", (event) => {
-        const fallbackLink = link.getAttribute("data-fallback-link") || link.getAttribute("href");
+        if (!isTouchDevice) return;
+
+        const href = link.getAttribute("href");
+        const fallbackLink = link.getAttribute("data-fallback-link") || href;
+        const iosLink = link.getAttribute("data-app-link-ios");
+        const androidLink = link.getAttribute("data-app-link-android");
+        const appLink = isIOS ? iosLink : (isAndroid ? androidLink : null);
 
         if (!fallbackLink) return;
 
         event.preventDefault();
-        window.location.href = fallbackLink;
+
+        if (!appLink || appLink === fallbackLink) {
+          window.location.assign(fallbackLink);
+          return;
+        }
+
+        let fallbackTimer = window.setTimeout(() => {
+          window.location.assign(fallbackLink);
+        }, 650);
+
+        const clearFallback = () => {
+          if (!fallbackTimer) return;
+          window.clearTimeout(fallbackTimer);
+          fallbackTimer = null;
+        };
+
+        document.addEventListener("visibilitychange", clearFallback, { once: true });
+        window.addEventListener("pagehide", clearFallback, { once: true });
+
+        window.location.assign(appLink);
       });
     });
   })();

@@ -389,6 +389,11 @@ nav .nav-links a.active::after {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  outline: none;
   transition:
     transform var(--dur-fast) var(--ease-standard),
     box-shadow var(--dur-fast) var(--ease-standard),
@@ -400,6 +405,12 @@ nav .nav-links a.active::after {
 .mode-toggle:hover,
 .menu-icon:hover {
   box-shadow: none;
+}
+
+.mode-toggle:active,
+.mode-toggle:focus,
+.mode-toggle:focus-visible {
+  outline: none;
 }
 
 .mode-toggle img {
@@ -3270,20 +3281,27 @@ body.dark-mode #contact.contact-showcase .contact-action-btn {
 @media (hover: none), (pointer: coarse) {
   #contact.contact-showcase .contact-action-btn,
   body.dark-mode #contact.contact-showcase .contact-action-btn {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
     border-color: transparent;
     box-shadow: none;
+    transition: none;
   }
 
   #contact.contact-showcase .contact-action-btn:hover,
   #contact.contact-showcase .contact-action-btn:active,
+  #contact.contact-showcase .contact-action-btn:focus,
   #contact.contact-showcase .contact-action-btn:focus-visible,
   body.dark-mode #contact.contact-showcase .contact-action-btn:hover,
   body.dark-mode #contact.contact-showcase .contact-action-btn:active,
+  body.dark-mode #contact.contact-showcase .contact-action-btn:focus,
   body.dark-mode #contact.contact-showcase .contact-action-btn:focus-visible {
     background: transparent;
     border-color: transparent;
     box-shadow: none;
     transform: none;
+    outline: none;
   }
 }
 
@@ -4742,7 +4760,7 @@ body.about-page .site-wrapper {
 
 .about-ref-name {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(2.25rem, 1.82rem + 1.5vw, 3.05rem);
+  font-size: clamp(2.02rem, 1.68rem + 1.28vw, 2.76rem);
   font-weight: 600;
   color: var(--heading);
   line-height: 1.01;
@@ -4752,7 +4770,7 @@ body.about-page .site-wrapper {
 
 .about-ref-role {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(1.34rem, 1.14rem + 0.72vw, 1.74rem);
+  font-size: 0.96rem;
   font-weight: 500;
   line-height: 1.18;
   letter-spacing: 0.002em;
@@ -4879,6 +4897,13 @@ body.dark-mode .portrait-ring {
   .about-ref-grid {
     grid-template-columns: 1fr;
   }
+
+  .about-ref-role {
+    white-space: nowrap;
+    font-size: clamp(1rem, 3.9vw, 1.24rem);
+    letter-spacing: 0;
+    max-width: none;
+  }
 }
 
 @media (max-width: 480px) {
@@ -4922,5 +4947,175 @@ body.dark-mode .portrait-ring {
   #profile.home-hero .hero-portrait {
     min-height: 188px !important;
     margin-top: 0.55rem !important;
+  }
+}
+
+/* Final mobile avatar lock: keep the home profile photo balanced on phones */
+@media screen and (max-width: 480px) {
+  #profile.home-hero .hero-portrait {
+    min-height: 230px !important;
+    margin-top: 0.75rem !important;
+  }
+
+  #profile.home-hero .hero-avatar,
+  #profile.home-hero .hero-avatar.profile-pic {
+    width: min(190px, 58vw) !important;
+    height: min(190px, 58vw) !important;
+    max-width: min(190px, 58vw) !important;
+    max-height: min(190px, 58vw) !important;
+    aspect-ratio: 1 / 1 !important;
+    display: grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-radius: 50% !important;
+    border: 2px solid rgba(200, 165, 116, 0.34) !important;
+    box-shadow: 0 0 0 1px rgba(200, 165, 116, 0.14), 0 14px 32px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  #profile.home-hero .hero-avatar .hero-pic,
+  #profile.home-hero .hero-avatar .profile-pic,
+  #profile.home-hero img.profile-pic.hero-pic {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    display: block !important;
+    margin: 0 !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+    transform: none !important;
+  }
+}
+
+/* Final iPad home-page orientation lock */
+@media screen and (min-width: 721px) and (max-width: 1024px) and (orientation: portrait) {
+  nav ul {
+    position: fixed !important;
+    top: var(--mobile-nav-offset) !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: calc(100dvh - var(--mobile-nav-offset)) !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    padding-top: 20px !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(-12px) !important;
+  }
+
+  nav ul.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(0) !important;
+  }
+
+  .menu-icon {
+    display: flex !important;
+  }
+
+  #profile.home-hero {
+    min-height: auto !important;
+    padding-top: 96px !important;
+    padding-bottom: 36px !important;
+  }
+
+  #profile.home-hero .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.2rem !important;
+    text-align: center !important;
+  }
+
+  #profile.home-hero .hero-content {
+    align-items: center !important;
+    text-align: center !important;
+    max-width: 560px !important;
+  }
+
+  #profile.home-hero .hero-role,
+  #profile.home-hero .hero-intro {
+    text-align: center !important;
+  }
+
+  #profile.home-hero .hero-portrait {
+    order: -1 !important;
+    justify-content: center !important;
+    min-height: 260px !important;
+    margin: 0 !important;
+  }
+
+  #profile.home-hero .hero-avatar {
+    width: clamp(200px, 40vw, 260px) !important;
+    height: clamp(200px, 40vw, 260px) !important;
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+  nav ul {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: auto !important;
+    height: auto !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding-top: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+  }
+
+  .menu-icon {
+    display: none !important;
+  }
+
+  body.menu-open {
+    overflow: auto !important;
+  }
+
+  #profile.home-hero {
+    min-height: calc(100vh - 120px) !important;
+    padding-top: clamp(6rem, 12vh, 9.5rem) !important;
+    padding-bottom: clamp(2.5rem, 6vh, 4rem) !important;
+  }
+
+  #profile.home-hero .hero-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.9fr) !important;
+    align-items: center !important;
+    gap: clamp(1.2rem, 3vw, 2.4rem) !important;
+    text-align: left !important;
+  }
+
+  #profile.home-hero .hero-content {
+    align-items: flex-start !important;
+    text-align: left !important;
+    max-width: 520px !important;
+  }
+
+  #profile.home-hero .hero-role,
+  #profile.home-hero .hero-intro {
+    text-align: left !important;
+  }
+
+  #profile.home-hero .hero-portrait {
+    order: 0 !important;
+    justify-content: flex-start !important;
+    min-height: 340px !important;
+    margin: 0 !important;
+  }
+
+  #profile.home-hero .hero-avatar {
+    width: clamp(230px, 26vw, 320px) !important;
+    height: clamp(230px, 26vw, 320px) !important;
   }
 }
