@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap">
-  <link rel="icon" type="image/png" sizes="32x32" href="images/jd.png">
+  <link rel="icon" type="image/x-icon" href="images/jeddyindia-transparent-white-favicon-max.ico">
   <link rel="stylesheet" href="styles.css">
   <script>
     (function () {
@@ -28,7 +28,14 @@
 </head>
 <body class="dark-mode">
   <nav class="navbar">
-    <a class="logo" href="index.html" aria-label="Go to Profile home page">JEDDY</a>
+    <a class="logo" href="index.html" aria-label="Go to Profile home page">
+      <span class="logo-mark logo-mark-light" aria-hidden="true">
+        <img src="images/jeddyindia-transparent-light-4k.png" alt="">
+      </span>
+      <span class="logo-mark logo-mark-dark" aria-hidden="true">
+        <img src="images/jeddyindia-transparent-dark-4k.png" alt="">
+      </span>
+    </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
@@ -61,6 +68,24 @@
           <button class="filter-btn" type="button" data-filter="animation" role="tab" aria-selected="false">Animations</button>
         </div>
       </div>
+      <section class="film-spotlight reveal" id="filmSpotlight" aria-live="polite">
+        <div class="film-spotlight-copy">
+          <p class="film-spotlight-eyebrow">Now Showing</p>
+          <h3 class="film-spotlight-title">Selected Project</h3>
+          <p class="film-spotlight-role"></p>
+        </div>
+        <div class="film-spotlight-screen">
+          <button class="film-spotlight-launch" id="filmSpotlightLaunch" type="button" aria-label="Play selected film">
+            <img class="film-spotlight-poster" id="filmSpotlightPoster" src="" alt="">
+            <span class="film-spotlight-play" aria-hidden="true"></span>
+            <div class="film-spotlight-overlay">
+              <p class="film-spotlight-kicker" id="filmSpotlightKicker"></p>
+              <p class="film-spotlight-note">Select from the filmstrip below and press play.</p>
+            </div>
+          </button>
+        </div>
+      </section>
+      <div class="films-reel" aria-label="Projects film reel">
       <div class="films-grid">
         <!--
         <article class="film-card reveal" data-category="trailer">
@@ -199,6 +224,7 @@
         </article>
         -->
       </div>
+      </div>
     </section>
   </main>
 
@@ -209,3 +235,9 @@
   <script src="script.js"></script>
 </body>
 </html>
+
+
+
+
+
+

@@ -279,7 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
         el.style.setProperty("--reveal-delay", customDelay);
         return;
       }
-      const delay = Math.min(index, 8) * 80;
+      const delay = Math.min(index, 8) * 65;
       el.style.setProperty("--reveal-delay", `${delay}ms`);
     });
 
@@ -291,7 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
           observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.18, rootMargin: "0px 0px -10% 0px" }
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
     );
 
     reveals.forEach((el) => observer.observe(el));
@@ -376,6 +376,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const show = filter === "all" || category === filter;
         card.classList.toggle("is-hidden", !show);
       });
+
+      window.dispatchEvent(new CustomEvent("films:layoutchange"));
     };
 
     buttons.forEach((btn) => {
@@ -392,10 +394,174 @@ document.addEventListener("DOMContentLoaded", () => {
     applyFilter("all");
   })();
 
+  // ================== FILM SPOTLIGHT ==================
+  (function () {
+    const spotlight = document.getElementById("filmSpotlight");
+    const launch = document.getElementById("filmSpotlightLaunch");
+    const poster = document.getElementById("filmSpotlightPoster");
+    const kicker = document.getElementById("filmSpotlightKicker");
+    const title = spotlight ? spotlight.querySelector(".film-spotlight-title") : null;
+    const role = spotlight ? spotlight.querySelector(".film-spotlight-role") : null;
+    const cards = document.querySelectorAll(".film-card[data-category]");
+    const desktopQuery = window.matchMedia("(min-width: 1025px)");
+    if (!spotlight || !launch || !poster || !kicker || !title || !role || !cards.length) return;
+
+    let activeCard = null;
+
+    const getVisibleCards = () => Array.from(cards).filter((card) => !card.classList.contains("is-hidden"));
+
+    const fillSpotlight = (card) => {
+      if (!card) return;
+      activeCard = card;
+
+      cards.forEach((item) => item.classList.toggle("is-active", item === card));
+
+      const posterImg = card.querySelector(".film-poster");
+      const cardTitle = card.querySelector(".film-meta h3");
+      const cardCategory = card.querySelector(".film-category");
+      const cardRole = card.querySelector(".film-role");
+      const videoId = card.querySelector(".film-player-wrap")?.getAttribute("data-video-id") || "";
+
+      if (posterImg) {
+        poster.src = posterImg.currentSrc || posterImg.src;
+        poster.alt = posterImg.alt || "";
+      }
+
+      title.textContent = cardTitle ? cardTitle.textContent.trim() : "Selected Project";
+      kicker.textContent = cardCategory ? cardCategory.textContent.trim() : "";
+      role.textContent = cardRole ? cardRole.textContent.trim() : "";
+      launch.setAttribute("data-video-id", videoId);
+      launch.setAttribute("aria-label", `Play ${title.textContent}`);
+
+      const iframe = spotlight.querySelector("iframe");
+      if (iframe) {
+        iframe.remove();
+        launch.hidden = false;
+      }
+    };
+
+    cards.forEach((card) => {
+      card.addEventListener("click", (event) => {
+        if (!desktopQuery.matches) return;
+        event.preventDefault();
+        fillSpotlight(card);
+      });
+    });
+
+    launch.addEventListener("click", () => {
+      const videoId = launch.getAttribute("data-video-id");
+      if (!videoId) return;
+
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
+      iframe.title = "YouTube video player";
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.allowFullscreen = true;
+      spotlight.querySelector(".film-spotlight-screen").appendChild(iframe);
+      launch.hidden = true;
+    });
+
+    const syncSpotlight = () => {
+      const visibleCards = getVisibleCards();
+      const nextCard = visibleCards.includes(activeCard) ? activeCard : visibleCards[0];
+      if (nextCard) fillSpotlight(nextCard);
+    };
+
+    window.addEventListener("films:layoutchange", syncSpotlight);
+    syncSpotlight();
+  })();
+
+  // ================== DESKTOP FILM REEL ==================
+  (function () {
+    const reel = document.querySelector(".films-reel");
+    const grid = reel ? reel.querySelector(".films-grid") : null;
+    if (!reel || !grid) return;
+
+    const desktopQuery = window.matchMedia("(min-width: 1025px)");
+    let currentOffset = 0;
+    let targetOffset = 0;
+    let maxOffset = 0;
+    let frameId = 0;
+
+    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+    const applyOffset = (value) => {
+      grid.style.setProperty("--films-offset", `${value}px`);
+    };
+
+    const animate = () => {
+      const diff = targetOffset - currentOffset;
+      if (Math.abs(diff) < 0.4) {
+        currentOffset = targetOffset;
+        applyOffset(currentOffset);
+        frameId = 0;
+        return;
+      }
+
+      currentOffset += diff * 0.14;
+      applyOffset(currentOffset);
+      frameId = window.requestAnimationFrame(animate);
+    };
+
+    const queueAnimation = () => {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(animate);
+    };
+
+    const measure = () => {
+      if (!desktopQuery.matches) {
+        currentOffset = 0;
+        targetOffset = 0;
+        maxOffset = 0;
+        applyOffset(0);
+        return;
+      }
+
+      maxOffset = Math.max(0, grid.scrollWidth - reel.clientWidth);
+      currentOffset = clamp(currentOffset, -maxOffset, 0);
+      targetOffset = clamp(targetOffset, -maxOffset, 0);
+      applyOffset(currentOffset);
+    };
+
+    reel.addEventListener("mousemove", (event) => {
+      if (!desktopQuery.matches || maxOffset <= 0) return;
+
+      const bounds = reel.getBoundingClientRect();
+      const ratio = clamp((event.clientX - bounds.left) / bounds.width, 0, 1);
+      targetOffset = -maxOffset * ratio;
+
+      if (prefersReducedMotion) {
+        currentOffset = targetOffset;
+        applyOffset(currentOffset);
+        return;
+      }
+
+      queueAnimation();
+    });
+
+    reel.addEventListener("mouseenter", measure);
+    window.addEventListener("resize", measure);
+    window.addEventListener("load", measure, { once: true });
+    window.addEventListener("films:layoutchange", () => {
+      window.requestAnimationFrame(measure);
+    });
+    if (typeof desktopQuery.addEventListener === "function") {
+      desktopQuery.addEventListener("change", measure);
+    } else if (typeof desktopQuery.addListener === "function") {
+      desktopQuery.addListener(measure);
+    }
+
+    measure();
+  })();
+
   // ================== FILM POSTER TO PLAYER ==================
   (function () {
     const wraps = document.querySelectorAll(".film-player-wrap[data-video-id]");
     if (!wraps.length) return;
+
+    const desktopSpotlight = document.getElementById("filmSpotlight");
 
     wraps.forEach((wrap) => {
       const launchBtn = wrap.querySelector(".film-launch");
@@ -403,6 +569,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!launchBtn || !videoId) return;
 
       launchBtn.addEventListener("click", () => {
+        if (desktopSpotlight && window.matchMedia("(min-width: 1025px)").matches) {
+          return;
+        }
+
         const iframe = document.createElement("iframe");
         iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
         iframe.title = "YouTube video player";
