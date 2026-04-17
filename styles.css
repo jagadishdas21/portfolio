@@ -3377,6 +3377,9 @@ body.dark-mode #contact.contact-showcase .contact-action-btn {
 
 @media (max-width: 480px) {
   #contact .contact-showcase-card {
+    width: 100%;
+    min-height: 214px;
+    box-sizing: border-box;
     justify-items: center;
     text-align: center;
     padding: 1.2rem 1rem;
@@ -3403,19 +3406,19 @@ body.dark-mode #contact.contact-showcase .contact-action-btn {
   }
 
   #contact .contact-card-note {
-    font-size: 0.7rem;
+    font-size: 0.74rem;
     letter-spacing: 0.16em;
     line-height: 1.2;
   }
 
   #contact .contact-card-meta {
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     letter-spacing: 0.12em;
     line-height: 1.5;
   }
 
   #contact .contact-card-address {
-    font-size: 0.9rem;
+    font-size: 0.96rem;
     max-width: 24ch;
   }
 
