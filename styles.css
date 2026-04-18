@@ -5010,18 +5010,18 @@ body.dark-mode .portrait-ring {
 
   #profile.home-hero .hero-avatar,
   #profile.home-hero .hero-avatar.profile-pic {
-    width: min(190px, 58vw) !important;
-    height: min(190px, 58vw) !important;
-    max-width: min(190px, 58vw) !important;
-    max-height: min(190px, 58vw) !important;
+    width: min(204px, 62vw) !important;
+    height: min(204px, 62vw) !important;
+    max-width: min(204px, 62vw) !important;
+    max-height: min(204px, 62vw) !important;
     aspect-ratio: 1 / 1 !important;
     display: grid !important;
     place-items: center !important;
     padding: 0 !important;
     overflow: hidden !important;
     border-radius: 50% !important;
-    border: 2px solid rgba(200, 165, 116, 0.34) !important;
-    box-shadow: 0 0 0 1px rgba(200, 165, 116, 0.14), 0 14px 32px rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(200, 165, 116, 0.28) !important;
+    box-shadow: 0 0 0 1px rgba(200, 165, 116, 0.1), 0 12px 24px rgba(0, 0, 0, 0.16) !important;
   }
 
   #profile.home-hero .hero-avatar .hero-pic,
