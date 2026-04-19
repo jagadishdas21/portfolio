@@ -230,35 +230,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let wordIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    const typingSpeed = 85;
-    const deleteSpeed = 55;
-    const pauseDelay = 1200;
+    let timerId = null;
+    let isTransitioning = false;
+    const visibleDelay = 3600;
+    const fadeDuration = 1100;
 
-    const tick = () => {
-      const currentWord = words[wordIndex];
-      if (!isDeleting) {
-        charIndex += 1;
-        typeEl.textContent = currentWord.slice(0, charIndex);
-        if (charIndex === currentWord.length) {
-          isDeleting = true;
-          window.setTimeout(tick, pauseDelay);
-          return;
-        }
-      } else {
-        charIndex -= 1;
-        typeEl.textContent = currentWord.slice(0, charIndex);
-        if (charIndex === 0) {
-          isDeleting = false;
-          wordIndex = (wordIndex + 1) % words.length;
-        }
-      }
+    typeEl.textContent = words[0];
 
-      window.setTimeout(tick, isDeleting ? deleteSpeed : typingSpeed);
+    const queueNext = (delay = visibleDelay) => {
+      window.clearTimeout(timerId);
+      timerId = window.setTimeout(swapWord, delay);
     };
 
-    tick();
+    const swapWord = () => {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      typeEl.classList.add("is-fade-hidden");
+
+      window.setTimeout(() => {
+        wordIndex = (wordIndex + 1) % words.length;
+        typeEl.textContent = words[wordIndex];
+        requestAnimationFrame(() => {
+          typeEl.classList.remove("is-fade-hidden");
+          window.setTimeout(() => {
+            isTransitioning = false;
+            queueNext(visibleDelay);
+          }, fadeDuration);
+        });
+      }, fadeDuration);
+    };
+
+    queueNext(visibleDelay);
   })();
 
   // ================== SCROLL REVEAL ==================
