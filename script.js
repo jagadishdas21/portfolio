@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
   const profilePics = document.querySelectorAll(".profile-pic");
   const STORAGE_KEY = "jeddy_mode";
-  const LIGHT_PROFILE_SRC = "images/home.png";
-  const DARK_PROFILE_SRC = "images/home.png";
+  const LIGHT_PROFILE_SRC = "images/home.webp";
+  const DARK_PROFILE_SRC = "images/home.webp";
   const prefersReducedMotion = window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
