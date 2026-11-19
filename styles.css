@@ -2360,7 +2360,7 @@ body.projects-page.dark-mode #projects .film-card:not(.is-active) {
 }
 
 body.projects-page #projects .film-player-wrap {
-  aspect-ratio: 16 / 9.35;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: transparent;
   border: 1px solid rgba(140,106,67,0.26);
@@ -2559,7 +2559,7 @@ body.projects-page #projects .film-card.is-hidden {
   }
 
   body.projects-page #projects .film-player-wrap {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9;
     border-radius: 12px;
   }
 
