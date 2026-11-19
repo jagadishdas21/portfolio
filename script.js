@@ -358,8 +358,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const applyFilter = (filter) => {
       cards.forEach((card) => {
-        const category = card.getAttribute("data-category");
-        const show = filter === "all" || category === filter;
+        const categories = (card.getAttribute("data-category") || "").split(/\s+/);
+        const show = filter === "all" || categories.includes(filter);
         card.classList.toggle("is-hidden", !show);
       });
 
@@ -437,8 +437,12 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!currentVideoId) return;
 
           const iframe = document.createElement("iframe");
-          iframe.src = `https://www.youtube.com/embed/${currentVideoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
-          iframe.title = "YouTube video player";
+          const isVimeo = currentVideoId.startsWith("vimeo:");
+          const embedId = isVimeo ? currentVideoId.slice(6) : currentVideoId;
+          iframe.src = isVimeo
+            ? `https://player.vimeo.com/video/${embedId}?autoplay=1&autopause=0&player_id=0&app_id=58479`
+            : `https://www.youtube.com/embed/${embedId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
+          iframe.title = isVimeo ? "Vimeo video player" : "YouTube video player";
           iframe.loading = "lazy";
           iframe.referrerPolicy = "strict-origin-when-cross-origin";
           iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
@@ -556,8 +560,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const buildIframe = (videoId) => {
       const iframe = document.createElement("iframe");
-      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
-      iframe.title = "YouTube video player";
+      const isVimeo = videoId.startsWith("vimeo:");
+      const embedId = isVimeo ? videoId.slice(6) : videoId;
+      iframe.src = isVimeo
+        ? `https://player.vimeo.com/video/${embedId}?autoplay=1&autopause=0&player_id=0&app_id=58479`
+        : `https://www.youtube.com/embed/${embedId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
+      iframe.title = isVimeo ? "Vimeo video player" : "YouTube video player";
       iframe.loading = "lazy";
       iframe.referrerPolicy = "strict-origin-when-cross-origin";
       iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
